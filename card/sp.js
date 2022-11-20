@@ -11,27 +11,6 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 				type:'trick',
 				notarget:true,
 				global:['g_jinchan','g_jinchan2'],
-				yingbian_tags:['gain','draw'],
-				yingbian_prompt:function(card){
-					var str='';
-					if(get.cardtag(card,'yingbian_gain')){
-						str+='当你声明使用此牌时，你获得此牌响应的目标牌';
-					}
-					if(!str.length||get.cardtag(card,'yingbian_draw')){
-						if(str.length) str+='；';
-						str+='当你声明使用此牌时，你摸一张牌';
-					}
-					return str;
-				},
-				yingbian:function(event){
-					var bool=false;
-					if(get.cardtag(event.card,'yingbian_gain')){
-						bool=true;
-						var cardx=event.respondTo;
-						if(cardx&&cardx[1]&&cardx[1].cards&&cardx[1].cards.filterInD('od').length) event.player.gain(cardx[1].cards.filterInD('od'),'gain2','log');
-					}
-					if(!bool||get.cardtag(event.card,'yingbian_draw')) event.player.draw();
-				},
 				content:function(){
 					var evt=event.getParent(3)._trigger;
 					if(evt.jinchan){
@@ -179,7 +158,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 				},
 				cardPrompt:function(card){
 					var str='出牌阶段，对你使用。你将【浮雷】置入判定区。若判定结果为♠，则目标角色受到X点雷电伤害（X为此牌判定结果为♠的次数）。判定完成后，将此牌移动到下家的判定区里。';
-					if(card.storage&&card.storage.fulei) str+=('<br><span style="font-family:LXGWWenKai">此牌已判定命中过：'+card.storage.fulei+'次</span>');
+					if(card.storage&&card.storage.fulei) str+=('<br><span style="font-family:yuanli">此牌已判定命中过：'+card.storage.fulei+'次</span>');
 					return str;
 				},
 				effect:function(){

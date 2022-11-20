@@ -15,7 +15,7 @@ game.import('play',function(lib,game,ui,get,ai,_status){
 					str='<span>'+lib.config.coin+'</span><span>金</span>'
 				}
 				else{
-					str='<span style="position:absolute">㉤</span><span style="margin-left:18px;line-height:10px">'+lib.config.coin+'</span>';
+					str='<span style="position:absolute">㉤</span><span style="margin-left:18px;font-family:xinwei;line-height:10px">'+lib.config.coin+'</span>';
 				}
 				if(lib.config.coin_canvas_playpackconfig){
 					ui.window.classList.add('canvas_top');
@@ -116,7 +116,7 @@ game.import('play',function(lib,game,ui,get,ai,_status){
 						str='<span>'+lib.config.coin+'</span><span>金</span>'
 					}
 					else{
-						str='<span style="position:absolute">㉤</span><span style="margin-left:18px;line-height:10px">'+lib.config.coin+'</span>';
+						str='<span style="position:absolute">㉤</span><span style="margin-left:18px;font-family:xinwei;line-height:10px">'+lib.config.coin+'</span>';
 					}
 					ui.coin.innerHTML=str;
 				}
@@ -316,7 +316,7 @@ game.import('play',function(lib,game,ui,get,ai,_status){
 							emissionRate = 1,
 							minParticleSize = 2;
 
-						//-----------------------------------------------------
+						//-------------------------------------------------------
 						// Vectors, and not the kind you put stuff in
 						var Vector=function(x, y, z) {
 						  this.x = x || 0;

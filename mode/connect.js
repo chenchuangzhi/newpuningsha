@@ -28,7 +28,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				node.style.width='400px';
 				node.style.height='30px';
 				node.style.lineHeight='30px';
-				// node.style.fontFamily='sarasa';
+				node.style.fontFamily='xinwei';
 				node.style.fontSize='30px';
 				node.style.padding='10px';
 				node.style.left='calc(50% - 210px)';
@@ -40,12 +40,6 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				node.style.textAlign='center';
 
 				var connect=function(e){
-					if(node.innerHTML=='47.99.105.222'){
-						alert('为保证官方服务器（47.99.105.222）安全，以及尊重现维护者苏婆玛丽奥，《一劳永逸》不允许连接官方服务器！\n如需进入，可用最新的离线/完整包重新覆盖等措施解除《一劳永逸》');
-						node.innerHTML='';
-						event.textnode.innerHTML='输入联机地址';
-						return;
-					}
 					event.textnode.innerHTML='正在连接...';
 					clearTimeout(event.timeout);
 					if(e) e.preventDefault();
@@ -69,7 +63,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				text.style.width='400px';
 				text.style.height='30px';
 				text.style.lineHeight='30px';
-				// text.style.fontFamily='sarasa';
+				text.style.fontFamily='xinwei';
 				text.style.fontSize='30px';
 				text.style.padding='10px';
 				text.style.left='calc(50% - 200px)';

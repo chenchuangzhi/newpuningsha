@@ -125,7 +125,7 @@
 }
 .menu-buttons .cardpiledelete,
 .toggle>.cardpiledelete{
-	display: block;
+	display: inline-block;
 	position: relative;
 	float: right;
 	margin-right: 4px;
@@ -194,44 +194,6 @@
 	animation: dialog_start2 0.3s;
 	-webkit-animation: dialog_start2 0.3s;
 }
-/*New add*/
-.removing>.menubg.characterstats{
-	transform: scale(0.8);
-	opacity: 0;
-	transition: all 0.3s;
-}
-.menubg.characterstats{
-	width: 500px;
-	height: 48px;
-	left: calc(50% - 250px);
-	top: calc(50% - 208px);
-	animation: dialog_start2 0.3s;
-	-webkit-animation: dialog_start2 0.3s;
-	display: grid;
-	column-gap: 18px;
-	grid-template-columns: 1fr 15% 15% 1fr;
-	grid-template-rows: 1fr 1fr;
-	font-size: 24px;
-	line-height: 24px;
-}
-.menubg.characterstats>div{
-	position: relative;
-}
-.menubg.characterstats>div:nth-child(4n-3),
-.menubg.characterstats>div:nth-child(4n-2){
-	text-align: right;
-}
-.menubg.characterstats>div:nth-child(4n-2){
-	justify-self: left;
-}
-.menubg.characterstats>div:nth-child(4n-1),
-.menubg.characterstats>div:nth-child(4n){
-	text-align: left;
-}
-.menubg.characterstats>div:nth-child(4n-1){
-	justify-self: right;
-}
-/*New add end*/
 .menubg.charactercard>.menubutton.large.ava{
 	width: 180px;
 	height: 240px;
@@ -257,7 +219,7 @@
 .menubg.charactercard>.ava>.changeskin{
 	bottom: 6px;
 	left: 6px;
-	font-family: 'sarasa';
+	font-family: 'xinwei';
 	font-size: 16px;
 	z-index: 2;
 	color: white;
@@ -432,7 +394,7 @@
 	opacity: 0.5;
 }
 .menu.main>.menu-content>div>.left.pane>.lefttext{
-    font-family: 'sarasa';
+    font-family: 'xinwei';
     font-size: 20px;
 }
 .menu.main>.menu-content>div>.left.pane>div:last-child{
@@ -692,7 +654,7 @@
 	background: linear-gradient(#4b4b4b, #464646);
 }
 .themebutton.ol{
-	background:url('../../image/background/standard_bg.png');
+	background:url('../../image/background/ol_bg.jpg');
 	background-size: cover;
 }
 .themebutton.ol>div:not(*:first-child){
@@ -703,7 +665,7 @@
 	background: linear-gradient(#4b4b4b, #464646);
 }
 .themebutton.simple{
-	background:url('../../image/background/standard_bg.png');
+	background:url('../../image/background/ol_bg.jpg');
 	background-size: cover;
 }
 .themebutton.simple>div:not(*:first-child){
@@ -879,7 +841,7 @@ input.fileinput::-webkit-file-upload-button {
 }
 .config.more>div{
 	transform:translateY(-2px);
-    font-family: 'sarasa';
+    font-family: 'huangcao','xinwei';
 }
 .config.more.on>div{
 	transform:rotate(90deg) translateX(-2px);
@@ -893,7 +855,7 @@ input.fileinput::-webkit-file-upload-button {
 .menubutton.large{
 	font-size:30px;
 	line-height:30px;
-	font-family:'sarasa';
+	font-family:'STXinwei','xinwei';
 }
 .menubutton.round{
 	width:40px;
@@ -901,7 +863,7 @@ input.fileinput::-webkit-file-upload-button {
 	border-radius:100%;
 	font-size:36px;
 	line-height:40px;
-	font-family:'sarasa'
+	font-family:'xinwei'
 }
 .menubutton.left{
 	float:left;
@@ -988,7 +950,7 @@ input.fileinput::-webkit-file-upload-button {
 }
 .menu-buttons>.new_character>.avatar>.select_avatar,
 .menu-buttons>.new_character>.card>.select_avatar{
-	font-family: 'sarasa';
+	font-family: 'xinwei';
 	font-size: 20px;
 	width: 100%;
 	height: 20px;
@@ -1196,7 +1158,7 @@ input.fileinput::-webkit-file-upload-button {
 	padding: 0;
 	text-align: center;
 	width: 80px;
-	font-family:'sarasa','STHeiti','SimHei','Microsoft JhengHei','Microsoft YaHei','WenQuanYi Micro Hei','Suits',Helvetica,Arial,sans-serif;
+	font-family:'STHeiti','SimHei','Microsoft JhengHei','Microsoft YaHei','WenQuanYi Micro Hei',Helvetica,Arial,sans-serif;
 }
 .videonode.menubutton.extension>.caption>.menubutton>a{
 	margin: 0;
@@ -1242,7 +1204,7 @@ input.fileinput::-webkit-file-upload-button {
 	top: 35px;
 	line-height: 20px;
 	text-align: left;
-	font-family:'sarasa','STHeiti','SimHei','Microsoft JhengHei','Microsoft YaHei','WenQuanYi Micro Hei','Suits',Helvetica,Arial,sans-serif
+	font-family:'STHeiti','SimHei','Microsoft JhengHei','Microsoft YaHei','WenQuanYi Micro Hei',Helvetica,Arial,sans-serif
 }
 .videonode.menubutton.extension>.text{
 	left: 0;
@@ -1263,7 +1225,7 @@ input.fileinput::-webkit-file-upload-button {
 	opacity: 1;
 }
 .videonode.menubutton>.victory{
-	font-family: 'sarasa';
+	font-family: 'huangcao','xinwei';
 	font-size: 25px;
 	text-shadow: black 0 0 1px,rgba(255, 203, 0,1) 0 0 2px,rgba(255, 203, 0,1) 0 0 5px,rgba(255, 203, 0,1) 0 0 5px,
 		rgba(255, 203, 0,1) 0 0 5px,black 0 0 1px;
@@ -1324,7 +1286,7 @@ input.fileinput::-webkit-file-upload-button {
 	height: 30px;
 	line-height: 30px;
 	font-size: 18px;
-	font-family: 'sarasa';
+	font-family: 'lishu','xinwei';
 }
 .onlineclient .videonode.videonodestatus{
 	height: auto;
@@ -1345,7 +1307,7 @@ input.fileinput::-webkit-file-upload-button {
 	margin-bottom: 5px;
 }
 .onlineevent>div.title{
-	font-family: 'sarasa';
+	font-family: 'xinwei';
 	font-size: 18px;
 }
 
@@ -1429,7 +1391,7 @@ input.fileinput::-webkit-file-upload-button {
 	white-space: nowrap;
 }
 .menubutton.large.dashboard>div:first-child{
-	font-family: 'sarasa';
+	font-family: 'lishu','xiaozhuan';
 	font-size: 60px;
 	line-height: 60px;
 	position: absolute;
@@ -1507,9 +1469,9 @@ input.fileinput::-webkit-file-upload-button {
 	overflow: hidden;
 }
 .popup-container.editor>div>.editbutton{
-	font-family: 'sarasa';
+	font-family: 'lishu';
 	font-size: 18px;
-	color: rgb(0,0,0);
+	color: rgb(60,60,60);
 	text-shadow: none;
 	position: absolute;
 	left: 0;
