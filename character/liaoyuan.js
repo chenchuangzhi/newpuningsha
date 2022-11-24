@@ -12,7 +12,8 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       nengtianshi: ["female", "liaoyuan2", 4, ["guozai","paoguang2"]],
       yuebuqun:["male","liaoyuan2",4,["zixia","zigong"]],
       linpingzhi:["male","liaoyuan2",4,['shane',"xianchou1"]],
-      yuyanjia:["female","liaoyuan2",3,['yuyan1','duanyan1']]
+      yuyanjia:["female","liaoyuan2",3,['yuyan1','duanyan1']],
+      dachu:['male','liaoyuan2',4,['dunai','douguaishiming']],
     },
     skill: {
       wuzhuang: {
@@ -835,7 +836,91 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       }
 
       }
-    }
+    },
+      dunai:{
+                    animationStr: '毒奶',
+                    intro:{//标记介绍
+                        name2:'毒奶',
+                        content:'已有#层毒'
+                    },
+                    trigger: {  player:['phaseZhunbeiBegin','phaseJieshuBegin'] },  //回合开始阶段或回合结束阶段
+                    filter:function(event,player){
+                        return player.countCards('h') > 0 // 手牌大于0才能发动
+                    },
+                    content:function(){//技能内容:
+                        "step 0"
+                        player.chooseToDiscard('h') // 选择弃置一张手牌
+                        "step 1"
+                        if(result.bool){ // 有没有弃置手牌
+                            player.chooseTarget(true).set('ai', function (target) {
+                                var att = get.attitude(_status.event.player, target);
+                                if (att > 0) return att + 1;
+                                if (att == 0) return Math.random();
+                                return att;
+                            }) // 选择目标
+                        }
+                        "step 2"
+                        if(result.bool && result.targets && result.targets.length > 0){ // 是否选择了目标
+                            let r = result.targets // 选择的目标数组
+                            // trigger是选择的目标
+                            r[0].addMark('dunai') // 给该角色加上一层毒奶标记
+                        }
+                    },
+                    group:'dunai_duor', // 技能组，可以理解为有标记的人会触发的技能
+                    ai:{
+                        effect:{
+                            target:function(){
+                                return -1
+                            },
+                            player:function(){
+                                return 2
+                            }
+                        }
+                    }
+                },
+                dunai_duor:{
+                        trigger:{//时机:
+                            global:"phaseZhunbeiBegin",//准备阶段
+                          },
+                        forced:true,//锁定技
+                        filter:function(event,player){ // 限定技能发动函数
+                            return event.player&&event.player.hasMark('dunai')&& event.player.countMark('dunai') > 0; // 有毒奶才会发动这个技能
+                        },
+                        content:function(){// 技能内容
+                            "step 0"
+                            if(trigger.player.countMark('dunai') % 2 === 0){ // 毒奶标记为偶数
+                                trigger.player.recover(trigger.player.countMark('dunai')) // 回复毒奶印记血量
+                            }else{ // 毒奶标记为奇数
+                                trigger.player.damage(trigger.player.countMark('dunai')) // 扣除毒奶印记血量
+                            }
+                            "step 1"
+                            trigger.player.removeMark('dunai') // 毒奶标记减一
+                            if(trigger.player.countMark('dunai') === 0){ // 毒奶标记为0
+                                trigger.player.unmarkSkill('dunai') //移除毒奶标记
+                            }
+                        }
+                    },
+                    douguaishiming:{
+                        forced:true,  //锁定技
+                        trigger: {  player:['damageEnd'] },  //受到伤害时
+                        filter:function(event,player){//发动限制条件
+
+                            return event.num > 1
+                          },
+                        content:function(){//技能内容:
+                            "step 0"
+                                player.chooseTarget(true).set('ai', function (target) {
+                                    var att = get.attitude(_status.event.player, target);
+                                    if (att > 0) return att + 1;
+                                    if (att == 0) return Math.random();
+                                    return att;
+                                })
+                            "step 1"
+                                let r = result.targets // 选择的目标数组
+                                r[0].addMark('dunai') // 给该角色加上一层毒奶标记
+                        },
+                        group:'dunai_duor', // 技能组，可以理解为有标记的人会触发的技能
+                    },
   },
     translate: {
       yuwentai: "宇文泰",
@@ -896,7 +981,12 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       yuyan1:"预言",
       yuyan1_info:"每回合限一次，你的回合内，选择一个有手牌的其他角色，然后预测其手牌里，有哪种牌型（基本、装备、锦囊），然后其展示手牌于你。若预测成功，其选择一张该类型手牌给你。",
       duanyan1:"断言",
-      duanyan1_info:"当你成为杀的目标时，你可以预测牌堆顶一张牌牌的花色，并展示之，若预测成功，取消此目标并获得此牌。"
+      duanyan1_info:"当你成为杀的目标时，你可以预测牌堆顶一张牌牌的花色，并展示之，若预测成功，取消此目标并获得此牌。",
+       dachu:'大厨',
+                  dunai:'毒奶',
+                  dunai_info:'回合开始阶段或回合结束，你可以弃置一张手牌，然后指定一名角色，该角色获得一个“毒奶”标记。一名角色的回合开始阶段，若该角色有“毒奶”标记，当标记数为奇数时，对其造成标记数量的伤害；当标记数为偶数时，其回复标记数量的生命值，然后失去一个标记',
+                  douguaishiming:'都怪市民',
+                  douguaishiming_info:'【锁定技】当你受到大于1的伤害后，你需要指定一名角色，该角色获得一个“毒奶”标记。',
     },
   }
 });
