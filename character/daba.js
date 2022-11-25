@@ -12,8 +12,12 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             helage: ["male", "daba", 3, ["xianyue", "qiusheng", "tashijiangjun"]],
             sp_nengtianshi: ["female", "daba", 3, ["sp_guozai", "sp_zhufu"]],
             xiaozhi: ["male", "daba", 3, ["pika", "penhuo"]],
-            pikaqiu:["male","daba",3,["pika_skill"]],
-            penhuolong:["male","daba",3,["penhuo_skill"]],
+            pikaqiu: ["male", "daba", 3, ["pika_skill"]],
+            penhuolong: ["male", "daba", 3, ["penhuo_skill"]],
+            xushimin: ['male', 'daba', 4, ['sbliegong', 'biyue']],
+            chenshuai: ['male', 'daba', 4, ['feigong', 'jianyu']],
+            mushuihan: ['male', 'daba', 4, ['guaishuai', 'guaichu', 'guaimin']],
+            huanshi: ['male', 'daba', 4, ['huanxie', 'yaowan']],
         },
         skill: {
             //赵襄
@@ -644,9 +648,9 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                     cardUsable: function (card, player, num) {
                         if (card.name == 'sha') return num + 1;
                     },
-//                    attackFrom: function (from, to, distance, player) {
-//                        return distance - Infinity;
-//                    },
+                    //                    attackFrom: function (from, to, distance, player) {
+                    //                        return distance - Infinity;
+                    //                    },
                 },
                 subSkill: {
                     "pro2": {
@@ -726,63 +730,399 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 },
             },
             //小智
-            penhuo:{
-				enable: "phaseUse",
-                usable:1,
-                init:function(player){
+            penhuo: {
+                enable: "phaseUse",
+                usable: 1,
+                init: function (player) {
                     player.storage["penhuo"] = false
                 },
-                filter:function(event,player){
+                filter: function (event, player) {
                     return !player.storage["penhuo"]
                 },
-				content:function(){
-					var fellow = game.addPlayer(9,"penhuolong","");
-					fellow.directgain(get.cards(4));
+                content: function () {
+                    var fellow = game.addPlayer(9, "penhuolong", "");
+                    fellow.directgain(get.cards(4));
                     fellow.addSkill("penhuo_skill")
-                    fellow.side=true;
+                    fellow.side = true;
                     fellow.ai.friend.push(player);
-					fellow.identity=player.identity;
+                    fellow.identity = player.identity;
                     player.storage["penhuo"] = true
-				}
-			},
-            pika:{
-				enable: "phaseUse",
-                usable:1,
-                init:function(player){
+                }
+            },
+            pika: {
+                enable: "phaseUse",
+                usable: 1,
+                init: function (player) {
                     player.storage["pika"] = false
                 },
-                filter:function(event,player){
+                filter: function (event, player) {
                     return !player.storage["pika"]
                 },
-				content:function(){
-					var fellow = game.addPlayer(10,"pikaqiu","");
-					fellow.directgain(get.cards(4));
+                content: function () {
+                    var fellow = game.addPlayer(10, "pikaqiu", "");
+                    fellow.directgain(get.cards(4));
                     fellow.addSkill("pika_skill")
-                    fellow.side=true;
+                    fellow.side = true;
                     fellow.ai.friend.push(player);
-					fellow.identity=player.identity;
+                    fellow.identity = player.identity;
                     player.storage["pika"] = true
-				},
-				ai:{
-                order:6,
-                result:{
-                player:1
+                },
+                ai: {
+                    order: 6,
+                    result: {
+                        player: 1
+                    }
                 }
-                }
-			},
-            penhuo_skill:{
-                forced:true,
-                trigger:{source:"damageBegin"},
-                content:function(){
+            },
+            penhuo_skill: {
+                forced: true,
+                trigger: { source: "damageBegin" },
+                content: function () {
                     trigger.card && (trigger.card.nature = 'fire')
                 }
             },
-            pika_skill:{
-                forced:true,
-                trigger:{source:"damageBegin"},
-                content:function(){
+            pika_skill: {
+                forced: true,
+                trigger: { source: "damageBegin" },
+                content: function () {
                     trigger.card && (trigger.card.nature = 'thunder')
                 }
+            },
+            //黄忠
+            sbliegong: {
+                audio: 2,
+                mod: {
+                    cardnature: function (card, player) {
+                        if (!player.getEquip(1) && get.name(card, player) == 'sha') return false;
+                    },
+                },
+                trigger: { player: 'useCardToPlayered' },
+                filter: function (event, player) {
+                    return !event.getParent()._sbliegong_player && event.targets.length == 1 && event.card.name == 'sha' && player.getStorage('sbliegong').length > 0;
+                },
+                prompt2: function (event, player) {
+                    var str = '', storage = player.getStorage('sbliegong');
+                    if (storage.length > 1) {
+                        str += ('展示牌堆顶的' + get.cnNumber(storage.length - 1) + '张牌并增加伤害；且');
+                    }
+                    str += ('令' + get.translation(event.target) + '不能使用花色为');
+                    for (var i = 0; i < storage.length; i++) {
+                        str += get.translation(storage[i]);
+                    }
+                    str += ('的牌响应' + get.translation(event.card));
+                    return str;
+                },
+                logTarget: 'target',
+                check: function (event, player) {
+                    var target = event.target;
+                    if (get.attitude(player, target) > 0) return false;
+                    if (target.hasSkillTag('filterDamage', null, {
+                        player: player,
+                        card: event.card,
+                    })) return false;
+                    var storage = player.getStorage('sbliegong');
+                    if (storage.length >= 4) return true;
+                    if (storage.length < 3) return false;
+                    if (target.hasShan()) return storage.contains('heart') && storage.contains('diamond');
+                    return true;
+                },
+                content: function () {
+                    var storage = player.getStorage('sbliegong').slice(0);
+                    var num = storage.length - 1;
+                    var evt = trigger.getParent();
+                    if (num > 0) {
+                        if (typeof evt.baseDamage != 'number') evt.baseDamage = 1;
+                        var cards = get.cards(num);
+                        player.showCards(cards.slice(0), get.translation(player) + '发动了【烈弓】');
+                        while (cards.length > 0) {
+                            var card = cards.pop();
+                            if (storage.contains(get.suit(card, false))) evt.baseDamage++;
+                            ui.cardPile.insertBefore(card, ui.cardPile.firstChild);
+                        }
+                        game.updateRoundNumber();
+                    }
+                    evt._sbliegong_player = player;
+                    player.addTempSkill('sbliegong_clear');
+                    var target = trigger.target;
+                    target.addTempSkill('sbliegong_block');
+                    if (!target.storage.sbliegong_block) target.storage.sbliegong_block = [];
+                    target.storage.sbliegong_block.push([evt.card, storage]);
+                    lib.skill.sbliegong.updateBlocker(target);
+                },
+                updateBlocker: function (player) {
+                    var list = [], storage = player.storage.sbliegong_block;
+                    if (storage && storage.length) {
+                        for (var i of storage) list.addArray(i[1]);
+                    }
+                    player.storage.sbliegong_blocker = list;
+                },
+                ai: {
+                    threaten: 3.5,
+                    directHit_ai: true,
+                    halfneg: true,
+                    skillTagFilter: function (player, tag, arg) {
+                        if (arg && arg.card && arg.card.name == 'sha') {
+                            var storage = player.getStorage('sbliegong');
+                            if (storage.length < 3 || !storage.contains('heart') || !storage.contains('diamond')) return false;
+                            var target = arg.target;
+                            if (target.hasSkill('bagua_skill') || target.hasSkill('bazhen') || target.hasSkill('rw_bagua_skill')) return false;
+                            return true;
+                        }
+                        return false;
+                    },
+                },
+                intro: {
+                    content: '已记录花色：$',
+                    onunmark: true,
+                },
+                group: 'sbliegong_count',
+                subSkill: {
+                    clear: {
+                        trigger: { player: 'useCardAfter' },
+                        forced: true,
+                        charlotte: true,
+                        popup: false,
+                        filter: function (event, player) {
+                            return event._sbliegong_player == player;
+                        },
+                        content: function () {
+                            player.unmarkSkill('sbliegong');
+                        },
+                    },
+                    block: {
+                        mod: {
+                            cardEnabled: function (card, player) {
+                                if (!player.storage.sbliegong_blocker) return;
+                                var suit = get.suit(card);
+                                if (suit == 'none') return;
+                                var evt = _status.event;
+                                if (evt.name != 'chooseToUse') evt = evt.getParent('chooseToUse');
+                                if (!evt || !evt.respondTo || evt.respondTo[1].name != 'sha') return;
+                                if (player.storage.sbliegong_blocker.contains(suit)) return false;
+                            },
+                        },
+                        trigger: {
+                            player: ['damageBefore', 'damageCancelled', 'damageZero'],
+                            target: ['shaMiss', 'useCardToExcluded', 'useCardToEnd'],
+                            global: ['useCardEnd'],
+                        },
+                        forced: true,
+                        firstDo: true,
+                        charlotte: true,
+                        onremove: function (player) {
+                            delete player.storage.sbliegong_block;
+                            delete player.storage.sbliegong_blocker;
+                        },
+                        filter: function (event, player) {
+                            if (!event.card || !player.storage.sbliegong_block) return false;
+                            for (var i of player.storage.sbliegong_block) {
+                                if (i[0] == event.card) return true;
+                            }
+                            return false;
+                        },
+                        content: function () {
+                            var storage = player.storage.sbliegong_block;
+                            for (var i = 0; i < storage.length; i++) {
+                                if (storage[i][0] == trigger.card) {
+                                    storage.splice(i--, 1);
+                                }
+                            }
+                            if (!storage.length) player.removeSkill('sbliegong_block');
+                            else lib.skill.sbliegong.updateBlocker(target);
+                        },
+                    },
+                    count: {
+                        trigger: {
+                            player: 'useCard',
+                            target: 'useCardToTargeted',
+                        },
+                        forced: true,
+                        filter: function (event, player, name) {
+                            if (name != 'useCard' && player == event.player) return false;
+                            var suit = get.suit(event.card);
+                            if (!lib.suit.contains(suit)) return false;
+                            if (player.storage.sbliegong && player.storage.sbliegong.contains(suit)) return false;
+                            return true;
+                        },
+                        content: function () {
+                            player.markAuto('sbliegong', [get.suit(trigger.card)]);
+                        },
+                    },
+                },
+            },
+            // 市民闭月
+            biyue: {
+                audio: 2,
+                trigger: { player: 'phaseJieshuBegin' },
+                frequent: true,
+                preHidden: true,
+                content: function () {
+                    player.draw();
+                },
+            },
+
+            //陈帅
+            feigong: {
+                animationStr: '非攻',
+                trigger: { source: 'damageBefore' },
+                content: function () {
+                    'step 0'
+                    player.chooseTarget(1, function (card, player, trigger) {
+                        return trigger.hp !== trigger.maxHp
+                    })
+                    'step 1'
+                    if (result.bool) {
+                        var r = result.targets[0]
+                        trigger.cancel();
+                        r.recover(Math.min(r.getDamagedHp(), trigger.num))
+                    }
+                },
+                ai: {
+                    effect: {
+                        threaten: 1.1,
+                        player: function (card, player, target) {
+                            if (player.hp < player.maxHp - 1) return 1.5
+                        },
+                        target: function (card, player, target) {
+                            if (target.hp === 1) return 1.0
+                        }
+                    }
+                }
+            },
+            jianyu: {
+                animationStr: '箭雨',
+                trigger: { player: 'phaseUseBegin' },
+                direct: true,
+                filter: function (event, player) {
+                    let r
+                    let s = player.stat
+                    for (let i = s.length - 2; i > 0; i--) {
+                        if (s[i].isMe) {
+                            r = s[i]
+                            break
+                        }
+                    }
+                    if (!r) {
+                        return true
+                    }
+                    if (!r.damage) {
+                        return true
+                    }
+                    return r.damage < 1
+                },
+                content: function () {
+                    player.chooseUseTarget({ name: 'wanjian', isCard: true }, get.prompt('jianyu'), '视为使用一张【万箭齐发】').logSkill = 'jianyu';
+                },
+            },
+
+            //沐水涵
+            guaishuai: {
+                forced: true,
+                trigger: { global: 'useCardToPlayered' },// 使用卡盘指定别人
+                filter: function (event, player, game) {
+                    if (!event.isFirstTarget) return false;   //指定第一个目标时才发动，防止一个万剑摸14牌
+                    //if(get.type(event.card)!='trick') return false;  //如果是锦囊牌
+                    if (get.info(event.card).multitarget) return false;  //牌是多目标的牌
+                    if (!event.targets.includes(player)) return false;  //目标有自己
+                    if (event.targets.length < 2) return false;   //目标数大于1
+                    return player.hp > 0;
+                },
+                content: function () {
+                    player.draw(2);
+                },
+            },
+            guaichu: {
+                forced: true,
+                trigger: { player: 'damageEnd' },// 受到伤害时
+                filter: function (event, player, game) {
+                    if (_status.currentPhase !== player) { // 必须在自己回合内受到伤害才会触发
+                        return false
+                    }
+                    return true
+                },
+                content: function () {
+                    player.draw(2);
+                },
+            },
+            guaimin: {
+                forced: true,
+                trigger: { global: 'phaseDiscardAfter' },
+                filter: function (event, player,) {
+                    return event.player != player; //不包含自己,则其他角色
+                },
+                content: function () {
+                    player.addTempSkill('guaimin2', 'phaseBefore'); // 添加临时技能，直到回合结束
+                },
+            },
+            guaimin2: {
+                forced: true,
+                trigger: { global: 'drawAfter' },
+                filter: function (event, player,) {
+                    return event.player != player; //不包含自己,则其他角色
+                },
+                content: function () {
+                    player.draw(2);
+                },
+            },
+            //幻始
+            huanxie: {
+                enable: 'phaseUse',
+                usable: 1,
+                skillAnimation: true,
+                animationColor: 'metal',
+                content: function () {
+                    "step 0"
+                    event.delay = false;
+                    event.targets = game.filterPlayer();
+                    event.targets.remove(player);
+                    event.targets.sort(lib.sort.seat);
+                    player.line(event.targets, 'green');
+                    event.targets2 = event.targets.slice(0);
+                    event.targets3 = event.targets.slice(0);
+                    "step 1"
+                    player.draw(5);
+                    player.removeSkill('huanxie');
+                    "step 2"
+                    if (event.targets.length) {
+                        event.current = event.targets.shift()
+                        if (event.current.countCards('e')) event.delay = true;
+                        event.current.discard(event.current.getCards('e')).delay = false;
+                    }
+                    "step 3"
+                    if (event.delay) game.delay(0.5);
+                    event.delay = false;
+                    if (event.targets.length) event.goto(2);
+                    "step 4"
+                    if (event.targets3.length) {
+                        var target = event.targets3.shift();
+                        target.chooseToDiscard(100, 'h', true).delay = false;
+                        if (target.countCards('h')) event.delay = true;
+                    }
+                    "step 5"
+                    if (event.delay) game.delay(0.5);
+                    event.delay = false;
+                    if (event.targets3.length) event.goto(4);
+                },
+                ai: {
+                    basic: {
+                        order: 20
+                    },
+                    player: function (player) {
+                        if (player.countCards('he', 'zhuge')) return 1
+                        if (player.hp < 2) return 1
+                        return -1
+                    }
+                }
+            },
+            yaowan: {
+                forced: true,
+                trigger: { player: 'phaseJieshuBegin' },
+                filter: function (event, player,) {
+                    return !player.hasSkill('huanxie'); //不包含自己,则其他角色
+                },
+                content: function () {
+                    player.die(); // 添加临时技能，直到回合结束
+                },
             },
         },
         translate: {
@@ -818,17 +1158,37 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             sp_guozai_info: "准备阶段，你可以进行一次判定并获得判定牌，此回合内你可以将与判定牌同颜色的牌视为【杀】使用且使用杀次数加1",
             sp_zhufu: "祝福",
             sp_zhufu_info: "游戏开始时，你可以选择一名其他角色，你与其体力上限与体力值+1",
-            xiaozhi:"小智",
-            pika:"皮卡",
-            penhuo:"喷火",
-            pika_info:"限定技，出牌阶段，你可以召唤一个皮卡丘",
-            penhuo_info:"限定技，出牌阶段，你可以召唤一个喷火龙",
-            pikaqiu:"皮卡丘",
-            penhuolong:"喷火龙",
-            pika_skill:"皮卡",
-            pika_skill_info:"锁定技。你的伤害均视为雷电伤害",
-            penhuo_skill:"喷火",
-            penhuo_skill_info:"锁定技。你的伤害均视为火焰伤害"
+            xiaozhi: "小智",
+            pika: "皮卡",
+            penhuo: "喷火",
+            pika_info: "限定技，出牌阶段，你可以召唤一个皮卡丘",
+            penhuo_info: "限定技，出牌阶段，你可以召唤一个喷火龙",
+            pikaqiu: "皮卡丘",
+            penhuolong: "喷火龙",
+            pika_skill: "皮卡",
+            pika_skill_info: "锁定技。你的伤害均视为雷电伤害",
+            penhuo_skill: "喷火",
+            penhuo_skill_info: "锁定技。你的伤害均视为火焰伤害",
+            mushuihan: "沐水涵",
+            guaichu: "怪厨",
+            guaichu_info: "你的回合内，你每受到一点伤害，你摸两张手牌",
+            guaishuai: "怪帅",
+            guaishuai_info: "当你成为牌目标时，若此牌目标大于1，你摸两张牌",
+            guaimin: "怪民",
+            guaimin_info: "当有其他角色在回合结束阶段摸牌时，你摸两张牌",
+            biyue: "闭月",
+            sbliegong: '烈弓',
+            sbliegong_info: '①若你的装备区内没有武器牌，则你手牌区内所有【杀】的属性视为无属性。②当你使用牌时，或成为其他角色使用牌的目标后，你记录此牌的花色。③当你使用【杀】指定唯一目标后，若你〖烈弓②〗的记录不为空，则你可亮出牌堆顶的X张牌（X为你〖烈弓②〗记录过的花色数-1），令此【杀】的伤害值基数+Y（Y为亮出牌中被〖烈弓②〗记录过花色的牌的数量），且目标角色不能使用〖烈弓②〗记录过花色的牌响应此【杀】。此【杀】使用结算结束后，你清除〖烈弓②〗的记录。',
+            chenshuai: '陈帅',
+            feigong: '非攻',
+            feigong_info: '每当你对其他角色造成伤害后，你可以阻止该伤害，并令一名非满血玩家回复对应伤害的血量（若玩家损失血量小于对应伤害，则目标玩家回复至满血）',
+            jianyu: '箭雨',
+            jianyu_info: '若你的上一回合没有造成伤害，则出牌阶段开始时，你可以选择发动该技能，视为你使用一张【万箭齐发】',
+            huanshi: '幻始',
+            huanxie: '幻屑',
+            huanxie_info: '【限定技】出牌阶段，你可以摸五张牌，然后弃置其他所有角色的所有牌',
+            yaowan: '药丸',
+            yaowan_info: '回合结束阶段，若你没有"幻屑技能"，则你死亡',
         },
     };
 });

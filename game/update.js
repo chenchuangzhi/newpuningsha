@@ -5,6 +5,9 @@ window.noname_update={
 		'更新排位赛',
 	],
 	files:[
+
+	    'character/daba.js',
+	    'character/liaoyuan.js',
 		'game/game.js',
 		'game/config.js',
 		'game/package.js',
