@@ -1,5 +1,5 @@
 window.noname_update={
-	version:'1.9.116.6',
+	version:'1.9.116.7',
 	update:'1.9.116.0',
 	changeLog:[
 		'更新排位赛',
