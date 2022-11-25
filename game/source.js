@@ -84,6 +84,7 @@ window.noname_source_list=[
 	'mode/connect.js',
 	'mode/huanhuazhizhan.js',
 	'mode/th_mougong.js',
+	'mode/paiwei.js',
 	'extension/boss/extension.js',
 	'extension/cardpile/extension.js',
 	'extension/coin/extension.js',

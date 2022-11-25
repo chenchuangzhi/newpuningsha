@@ -7272,6 +7272,7 @@ window.noname_asset_list=[
 	'image/card/zhu2.png',
 	'image/splash/huanhuazhizhan.jpg',
 	'image/splash/th_mougong.jpg',
+	'image/splash/paiwei.jpg',
 
 	'audio/skill/_neiTequan.mp3',
 	'audio/skill/_useAnger.mp3'

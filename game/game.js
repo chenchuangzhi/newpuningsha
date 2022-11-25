@@ -5543,6 +5543,212 @@
 					},
 				}
 			},
+			paiwei:{
+				name:'排位赛',
+				connect:{
+					update:function(config,map){
+						map.connect_replace_handcard.show();
+					},
+					connect_versus_mode:{
+						name:'游戏模式',
+						init:'2v2',
+						item:{
+							'2v2':'2v2',
+						},
+						frequent:false
+					},
+					connect_replace_handcard:{
+						name:'四号位保护',
+						init:true,
+						frequent:true,
+						intro:'最后行动的角色起始手牌数+1'
+					},
+					// connect_choice_num:{
+					// 	name:'侯选武将数',
+					// 	init:'20',
+					// 	frequent:true,
+					// 	item:{
+					// 		'12':'12人',
+					// 		'16':'16人',
+					// 		'20':'20人',
+					// 		'24':'24人',
+					// 		'40':'40人',
+					// 	}
+					// },
+				// 	connect_replace_number:{
+				// 		name:'替补人数',
+				// 		init:'0',
+				// 		frequent:true,
+				// 		item:{
+				// 			'0':'无',
+				// 			'1':'1人',
+				// 			'2':'2人',
+				// 			'3':'3人',
+				// 			'4':'4人',
+				// 			'5':'5人',
+				// 		}
+				// 	},
+				},
+				config:{
+					update:function(config,map){
+						if(config.versus_mode=='four'){
+						}
+						else{
+							map.change_choice.show();
+						}
+						if(config.versus_mode=='three'){
+							map.edit_character_three.show();
+						}
+						else{
+						}
+						if(config.versus_mode=='three'||config.versus_mode=='one'){
+							map.enable_all_three.show();
+							map.enable_all_cards.show();
+						}
+						else{
+						}
+						if(config.versus_mode=='jiange'||config.versus_mode=='two'||config.versus_mode=='endless'||
+							config.versus_mode=='three'||config.versus_mode=='one'||config.versus_mode=='siguo'){
+							map.free_choose.show();
+						}
+						else{
+						}
+						if(config.versus_mode=='jiange'){
+							map.double_character_jiange.show();
+						}
+						else{
+						}
+						if(config.versus_mode=='two'){
+							map.replace_handcard_two.show();
+							map.replace_character_two.show();
+							map.two_assign.show();
+							map.two_phaseswap.show();
+						}
+						else{
+						}
+						if(config.versus_mode=='two'||config.versus_mode=='siguo'||config.versus_mode=='four'){
+							if(config.versus_mode=='four'&&(config.four_assign||config.four_phaseswap)){
+								map.change_identity.hide();
+							}
+							else{
+								map.change_identity.show();
+							}
+						}
+						else{
+							map.change_identity.hide();
+						}
+						if(config.versus_mode=='siguo'){
+							map.siguo_character.show();
+						}
+						else{
+						}
+					},
+					versus_mode:{
+						name:'游戏模式',
+						init:'two',
+						item:{
+							two:'2v2',
+						},
+						restart:true,
+						frequent:true,
+					},
+					two_assign:{
+						name:'代替队友选将',
+						init:false,
+						restart:true,
+					},
+					two_phaseswap:{
+						name:'代替队友行动',
+						init:false,
+						restart:true,
+					},
+					free_choose:{
+						name:'自由选将',
+						init:true,
+						frequent:true,
+						onclick:function(bool){
+							game.saveConfig('free_choose',bool,this._link.config.mode);
+							if(!ui.create.cheat2) return;
+							if(!_status.event.getParent().showConfig&&!_status.event.showConfig) return;
+							if(!ui.cheat2&&get.config('free_choose')) ui.create.cheat2();
+							else if(ui.cheat2&&!get.config('free_choose')){
+								ui.cheat2.close();
+								delete ui.cheat2;
+							}
+						}
+					},
+					fouralign:{
+						name:'自由选择阵型',
+						init:false
+					},
+					change_identity:{
+						name:'自由选择座位',
+						init:true,
+						onclick:function(bool){
+							game.saveConfig('change_identity',bool,this._link.config.mode);
+							if(!_status.event.getParent().showConfig&&!_status.event.showConfig) return;
+							if(_status.mode=='four'){
+								if(get.config('four_assign')||get.config('four_phaseswap')) return;
+								if(bool){
+									if(_status.event.parent.addSetting){
+										_status.event.parent.addSetting();
+									}
+								}
+								else{
+									var seats=_status.event.parent.seatsbutton;
+									if(seats){
+										while(seats.length){
+											seats.shift().remove();
+										}
+										delete _status.event.parent.seatsbutton;
+									}
+								}
+							}
+							else{
+								var dialog;
+								if(ui.cheat2&&ui.cheat2.backup) dialog=ui.cheat2.backup;
+								else dialog=_status.event.dialog;
+								if(!_status.brawl||!_status.brawl.noAddSetting){
+									if(!dialog.querySelector('table')&&get.config('change_identity')) _status.event.getParent().addSetting(dialog);
+									else _status.event.getParent().removeSetting(dialog);
+								}
+								ui.update();
+							}
+						}
+					},
+					change_choice:{
+						name:'开启换将卡',
+						init:true,
+						onclick:function(bool){
+							game.saveConfig('change_choice',bool,this._link.config.mode);
+							if(!_status.event.getParent().showConfig&&!_status.event.showConfig) return;
+							if(!ui.cheat&&get.config('change_choice')) ui.create.cheat();
+							else if(ui.cheat&&!get.config('change_choice')){
+								ui.cheat.close();
+								delete ui.cheat;
+							}
+						},
+						frequent:true,
+					},
+					replace_handcard_two:{
+						name:'四号位保护',
+						init:true,
+						frequent:true,
+						intro:'最后行动的角色起始手牌+1'
+					},
+					replace_character_two:{
+						name:'替补模式',
+						init:false,
+						frequent:true,
+						intro:'每个额外选择一名武将，死亡后用该武将代替重新上场，替补武将用完时失败'
+					},
+					expand_dialog:{
+						name:'默认展开选将框',
+						intro:'选将框打开时直接显示全部武将（可能使游戏在开始时卡顿）',
+						init:false,
+					},
+				}
+			},
 			versus:{
 				name:'对决',
 				connect:{

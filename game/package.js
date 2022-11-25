@@ -53,6 +53,7 @@ window.noname_package={
 		identity:'身份',
 		th_mougong:'谋攻',
 		guozhan:'国战',
+		paiwei:"排位赛",
 		versus:'对决',
 		connect:'联机',
 		huanhuazhizhan:'幻化',
