@@ -5,7 +5,7 @@ window.noname_update={
 		'更新狗卡最近的几个谋武将，修复护甲bug',
 	],
 	files:[
-	'extension/十周年UI/extension.js'
+	'extension/十周年UI/extension.js',
 	'image/character/bol_caocao.jpg',
 	'image/character/bol_huanggai.jpg',
 	'image/character/bol_zhouyu.jpg',
