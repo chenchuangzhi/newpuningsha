@@ -1169,6 +1169,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             pika_skill_info: "锁定技。你的伤害均视为雷电伤害",
             penhuo_skill: "喷火",
             penhuo_skill_info: "锁定技。你的伤害均视为火焰伤害",
+            xushimin:"许市民",
             mushuihan: "沐水涵",
             guaichu: "怪厨",
             guaichu_info: "你的回合内，你每受到一点伤害，你摸两张手牌",
