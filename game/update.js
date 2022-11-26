@@ -1,8 +1,8 @@
 window.noname_update={
-	version:'1.9.116.7',
+	version:'1.9.116.8',
 	update:'1.9.116.0',
 	changeLog:[
-		'更新排位赛',
+		'新增高欢',
 	],
 	files:[
 
