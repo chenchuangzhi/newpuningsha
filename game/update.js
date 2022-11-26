@@ -1,11 +1,15 @@
 window.noname_update={
-	version:'1.9.116.8',
+	version:'1.9.116.9',
 	update:'1.9.116.0',
 	changeLog:[
-		'新增高欢',
+		'更新狗卡最近的几个谋武将',
 	],
 	files:[
-
+	'image/character/bol_caocao.jpg',
+	'image/character/bol_huanggai.jpg',
+	'image/character/bol_zhouyu.jpg',
+	'image/character/bol_xiahoushi.jpg',
+        'character/sb.js',
 	    'character/daba.js',
 	    'character/liaoyuan.js',
 		'game/game.js',
