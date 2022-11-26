@@ -14,6 +14,7 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       linpingzhi:["male","liaoyuan2",4,['shane',"xianchou1"]],
       yuyanjia:["female","liaoyuan2",3,['yuyan1','duanyan1']],
       dachu:['male','liaoyuan2',4,['dunai','douguaishiming']],
+      gaohuan:['male','liaoyuan2',4,['yanji','xunhua']],
     },
     skill: {
       wuzhuang: {
@@ -921,6 +922,47 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
                         },
                         group:'dunai_duor', // 技能组，可以理解为有标记的人会触发的技能
                     },
+                    yanji:{
+                      enable:"phaseUse",//出牌阶段发动
+                      selectCard:1,//弃置一张
+                      position:'e',
+                      filterCard:function(card,player){
+                return card==player.getEquip(3) || card==player.getEquip(4);  // 选择+马或-马
+              },
+                      filter:function(event,player){
+                          return player.getEquip(3) || player.getEquip(4)
+                      },
+                      filterTarget:function(card,player,target){
+                return target!=player;
+              },
+              selectCard:1,
+              selectTarget:-1,
+                      content:function(){//内容:
+                          'step 0'
+                          target.chooseCard(true,'he').set("prompt",'选择一张牌交给'+get.translation(player))
+                          'step 1'
+                if(result){
+                  player.gain(result.cards,target,'giveAuto');
+                }
+                      },
+                      ai:{
+                          basic:{
+                              order:20
+                          },
+                          result:{//收益(只有主动技可以写)
+                              player:1
+                          },
+                      }
+                  },
+                  xunhua:{
+              mod:{
+                globalFrom:function(from,to,distance){
+                  return distance-game.countPlayer(function(current){
+                    return current.countCards('h') > 0;
+                  });
+                },
+              }
+            },
   },
     translate: {
       yuwentai: "宇文泰",
@@ -982,11 +1024,16 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       yuyan1_info:"每回合限一次，你的回合内，选择一个有手牌的其他角色，然后预测其手牌里，有哪种牌型（基本、装备、锦囊），然后其展示手牌于你。若预测成功，其选择一张该类型手牌给你。",
       duanyan1:"断言",
       duanyan1_info:"当你成为杀的目标时，你可以预测牌堆顶一张牌牌的花色，并展示之，若预测成功，取消此目标并获得此牌。",
-       dachu:'大厨',
-                  dunai:'毒奶',
-                  dunai_info:'回合开始阶段或回合结束，你可以弃置一张手牌，然后指定一名角色，该角色获得一个“毒奶”标记。一名角色的回合开始阶段，若该角色有“毒奶”标记，当标记数为奇数时，对其造成标记数量的伤害；当标记数为偶数时，其回复标记数量的生命值，然后失去一个标记',
-                  douguaishiming:'都怪市民',
-                  douguaishiming_info:'【锁定技】当你受到大于1的伤害后，你需要指定一名角色，该角色获得一个“毒奶”标记。',
+      dachu:'大厨',
+      dunai:'毒奶',
+      dunai_info:'回合开始阶段或回合结束，你可以弃置一张手牌，然后指定一名角色，该角色获得一个“毒奶”标记。一名角色的回合开始阶段，若该角色有“毒奶”标记，当标记数为奇数时，对其造成标记数量的伤害；当标记数为偶数时，其回复标记数量的生命值，然后失去一个标记',
+      douguaishiming:'都怪市民',
+      douguaishiming_info:'【锁定技】当你受到大于1的伤害后，你需要指定一名角色，该角色获得一个“毒奶”标记。',
+      gaohuan:'高欢',
+      yanji:'严纪',
+      yanji_info:'出牌阶段，你可以发动此技能，选择弃置一张装备牌里的马，然后让场上其他角色选择一张牌给你。',
+      xunhua:'驯化',
+      xunhua_info:'锁定技，你计算与其他角色的距离时-X。（X为场上拥有手牌数的玩家）',
     },
   }
 });
