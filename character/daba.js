@@ -1137,14 +1137,14 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                     return end - player.storage.start > 6000; 
                 },
                 content: function () {
-                    player.remove('lianxi')
+                    player.removeSkill('lianxi')
                     player.addSkill('changtiao');
                 },
             },
             changtiao: {
                 forced: true,
                 target: {
-                    player: 'phaseZhunBeiBegin'
+                    player: 'phaseZhunbeiBegin'
                 },
                 content: function () {
                     player.draw();
