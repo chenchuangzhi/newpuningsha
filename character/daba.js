@@ -18,6 +18,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             chenshuai: ['male', 'daba', 4, ['feigong', 'jianyu']],
             mushuihan: ['male', 'daba', 4, ['guaishuai', 'guaichu', 'guaimin']],
             huanshi: ['male', 'daba', 4, ['huanxie', 'yaowan']],
+            xukun: ['fmale', 'daba', 4, ['lianxi', 'baozha']],
         },
         skill: {
             //赵襄
@@ -1124,6 +1125,45 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                     player.die(); // 添加临时技能，直到回合结束
                 },
             },
+
+            lianxi1: {
+                forced: true,
+                trigger: { player: 'phaseZhunBeiBegin' },
+                init: function (player) {
+                    player.storage.end = new Date().getTime()
+                },
+                filter: function (event, player,) {
+                    return player.storage.end - player.storage.start > 6000; //不包含自己,则其他角色
+                },
+                content: function () {
+                    player.removeSkill('lianxi1');
+                    player.addSkill('changtiao');
+                },
+            },
+            lianxi: {
+                forced: true,
+                trigger: {
+                    global: "gameDrawAfter",
+                    player: "enterGame",
+                },
+                init: function (player) {
+                    player.storage.start = new Date().getTime()
+                },
+                content: function () {
+                    player.addSkill('lianxi1');
+                
+                },
+            },
+            changtiao: {
+                forced: true,
+                target: {
+                    player: 'phaseZhunBeiBegin'
+                },
+                content: function () {
+                    player.draw();
+
+                },
+            }
         },
         translate: {
             wuzhaoxiang: '吴赵襄',
@@ -1169,7 +1209,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             pika_skill_info: "锁定技。你的伤害均视为雷电伤害",
             penhuo_skill: "喷火",
             penhuo_skill_info: "锁定技。你的伤害均视为火焰伤害",
-            xushimin:"许市民",
+            xushimin: "许市民",
             mushuihan: "沐水涵",
             guaichu: "怪厨",
             guaichu_info: "你的回合内，你每受到一点伤害，你摸两张手牌",
@@ -1190,6 +1230,13 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             huanxie_info: '【限定技】出牌阶段，你可以摸五张牌，然后弃置其他所有角色的所有牌',
             yaowan: '药丸',
             yaowan_info: '回合结束阶段，若你没有"幻屑技能"，则你死亡',
+            xukun: '蔡徐坤',
+            lianxi: '练习',
+            lianxi_info: '觉醒技，游戏开始时，你进行练习，游戏一分钟相当于一年；当你练习时长2年半后。回合开始阶段，你获得“唱跳”。',
+            baozha: '爆炸',
+            baozha_info: '出牌阶段限一次，你可以令一名角色观看你的手牌，然后获得看一眼标记。若此时标记大于1，该角色消除看一眼标记，并进行爆炸。（爆炸：你与你距离为1的角色受到一点伤害）',
+            changtiao: '唱跳',
+            changtiao_info: '唱跳：转换技 唱：准备阶段，你摸一张牌，然后本回合使用牌没有距离限制。跳：准备阶段，你弃置一张牌，然后本回合使用牌没有次数限制',
         },
     };
 });
