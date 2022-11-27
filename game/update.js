@@ -1,8 +1,8 @@
 window.noname_update={
-	version:'1.9.116.11',
+	version:'1.9.116.12',
 	update:'1.9.116.0',
 	changeLog:[
-		'更新鬼谷子',
+		'修复鬼谷子在自己回合内死亡不能使用纵横的情况',
 	],
 	files:[
 	'extension/十周年UI/extension.js',

@@ -15,7 +15,7 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       yuyanjia:["female","liaoyuan2",3,['yuyan1','duanyan1']],
       dachu:['male','liaoyuan2',4,['dunai','douguaishiming']],
       gaohuan:['male','liaoyuan2',4,['yanji','xunhua']],
-      guiguzi:['male','liaoyuan2',3,['zongheng']]
+      guiguzi:['male','liaoyuan2',3,['zongheng','test']]
     },
     skill: {
       wuzhuang: {
@@ -1010,7 +1010,7 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
               locked:false,
               enable:'chooseToUse',
               viewAsFilter:function(player){
-                return player!=_status.currentPhase&&player.countCards('h')>0;
+                return  player.isDying() || (player!=_status.currentPhase&&player.countCards('h')>0);
               },
               filterCard:function(card){
                 return true
@@ -1029,7 +1029,7 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
               filterCard:true,
               enable:'chooseToUse',
               viewAsFilter:function(player){
-                return player!=_status.currentPhase&&player.countCards('h')>0;
+                return player.countCards('h')>0;
               },
               ai:{
                 respondShan:true,
@@ -1059,6 +1059,15 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
                     if(get.tag(card,'respondSha')) return 0.5;
                   }
                 }
+              },
+            },
+            test:{
+              trigger:{
+                player:"phaseZhunbeiBegin"
+              },
+              forced:true,
+              content:function(){
+                player.loseHp(4)
               }
             }
   },
@@ -1138,7 +1147,9 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       zongheng_sha:"纵横",
       zongheng_shan:"纵横",
       zongheng_tao:"纵横",
-      zongheng_info:"当你需要进行响应时，你可以打出任意一张手牌进行响应。"
+      zongheng_info:"当你需要进行响应时，你可以打出任意一张手牌进行响应。",
+      test:"测试",
+      test_info:"测试使用"
     },
   }
 });
