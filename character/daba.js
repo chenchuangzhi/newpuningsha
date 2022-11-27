@@ -18,7 +18,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             chenshuai: ['male', 'daba', 4, ['feigong', 'jianyu']],
             mushuihan: ['male', 'daba', 4, ['guaishuai', 'guaichu', 'guaimin']],
             huanshi: ['male', 'daba', 4, ['huanxie', 'yaowan']],
-            xukun: ['fmale', 'daba', 4, ['lianxi', 'baozha']],
+            xukun: ['fmale', 'daba', 4, ['lianxi']],
         },
         skill: {
             //赵襄
@@ -1126,32 +1126,19 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 },
             },
 
-            lianxi1: {
+            lianxi:{
                 forced: true,
-                trigger: { player: 'phaseZhunBeiBegin' },
-                init: function (player) {
-                    player.storage.end = new Date().getTime()
-                },
-                filter: function (event, player,) {
-                    return player.storage.end - player.storage.start > 6000; //不包含自己,则其他角色
-                },
-                content: function () {
-                    player.removeSkill('lianxi1');
-                    player.addSkill('changtiao');
-                },
-            },
-            lianxi: {
-                forced: true,
-                trigger: {
-                    global: "gameDrawAfter",
-                    player: "enterGame",
-                },
+                trigger: { player: 'phaseZhunbeiBegin' },
                 init: function (player) {
                     player.storage.start = new Date().getTime()
                 },
+                filter: function (event, player) {
+                    const end = new Date().getTime()
+                    return end - player.storage.start > 6000; 
+                },
                 content: function () {
-                    player.addSkill('lianxi1');
-                
+                    player.remove('lianxi')
+                    player.addSkill('changtiao');
                 },
             },
             changtiao: {

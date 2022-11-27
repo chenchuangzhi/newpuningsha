@@ -15,7 +15,7 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       yuyanjia:["female","liaoyuan2",3,['yuyan1','duanyan1']],
       dachu:['male','liaoyuan2',4,['dunai','douguaishiming']],
       gaohuan:['male','liaoyuan2',4,['yanji','xunhua']],
-      guiguzi:['male','liaoyuan2',3,['zongheng','test']]
+      guiguzi:['male','liaoyuan2',3,['zongheng']]
     },
     skill: {
       wuzhuang: {
