@@ -1,8 +1,8 @@
 window.noname_update={
-	version:'1.9.116.10',
+	version:'1.9.116.11',
 	update:'1.9.116.0',
 	changeLog:[
-		'更新狗卡最近的几个谋武将，修复护甲bug',
+		'更新鬼谷子',
 	],
 	files:[
 	'extension/十周年UI/extension.js',
@@ -10,6 +10,7 @@ window.noname_update={
 	'image/character/bol_huanggai.jpg',
 	'image/character/bol_zhouyu.jpg',
 	'image/character/bol_xiahoushi.jpg',
+	'image/character/guiguzi.jpg',
         'character/sb.js',
 	    'character/daba.js',
 	    'character/liaoyuan.js',
