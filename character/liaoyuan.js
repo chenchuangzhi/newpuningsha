@@ -15,6 +15,7 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       yuyanjia:["female","liaoyuan2",3,['yuyan1','duanyan1']],
       dachu:['male','liaoyuan2',4,['dunai','douguaishiming']],
       gaohuan:['male','liaoyuan2',4,['yanji','xunhua']],
+      guiguzi:['male','liaoyuan2',3,['zongheng']]
     },
     skill: {
       wuzhuang: {
@@ -963,6 +964,103 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
                 },
               }
             },
+            zongheng:{
+              group:["zongheng_wuxie","zongheng_tao","zongheng_sha","zongheng_shan"]
+            },
+            zongheng_wuxie:{
+              silent:true,
+              popup:false,
+              enable:"chooseToUse",
+              filterCard:true,
+              viewAsFilter:function(player){
+                return player.countCards('h')>0;
+              },
+              viewAs:{
+                name:"wuxie",
+              },
+              check:function(card){
+                if(card.name=='wuxie') return 1000;
+                return 0;
+              },
+              prompt:"将一张手牌当无懈可击使用",
+              threaten:1.2,
+            },
+            zongheng_tao:{
+              mod:{
+                aiValue:function(player,card,num){
+                  if(get.name(card)!='tao') return;
+                  var cards=player.getCards('h',function(card){
+                    return get.name(card)=='tao';
+                  });
+                  cards.sort(function(a,b){
+                    return (get.name(a)=='tao'?1:2)-(get.name(b)=='tao'?1:2);
+                  });
+                  var geti=function(){
+                    if(cards.contains(card)){
+                      return cards.indexOf(card);
+                    }
+                    return cards.length;
+                  };
+                  return Math.max(num,[6.5,4,3,2][Math.min(geti(),2)]);
+                },
+                aiUseful:function(){
+                  return lib.skill.kanpo.mod.aiValue.apply(this,arguments);
+                },
+              },
+              locked:false,
+              enable:'chooseToUse',
+              viewAsFilter:function(player){
+                return player!=_status.currentPhase&&player.countCards('h')>0;
+              },
+              filterCard:function(card){
+                return true
+              },
+              position:'h',
+              viewAs:{name:'tao'},
+              prompt:'将一张牌当桃使用',
+              check:function(card){return 15-get.value(card)},
+              ai:{
+                threaten:1.5,
+              }
+            },
+            zongheng_shan:{
+              position:'h',
+				      viewAs:{name:"shan"},
+              filterCard:true,
+              enable:'chooseToUse',
+              viewAsFilter:function(player){
+                return player!=_status.currentPhase&&player.countCards('h')>0;
+              },
+              ai:{
+                respondShan:true,
+                effect:{
+                  target:function(card,player,target,effect){
+                    if(get.tag(card,'respondShan')) return 0.5;
+                  }
+                }
+              }
+            },
+            zongheng_sha:{
+              position:'h',
+				      viewAs:{name:"sha"},
+              filterCard:true,
+              enable:['chooseToUse','chooseToRespond'],
+              viewAsFilter:function(player){
+                if(_status.event.name === 'chooseToUse'){
+                  return player!=_status.currentPhase&&player.countCards('h')>0;
+                }else{
+                  return player.countCards('h')>0;
+                }
+              },
+              ai:{
+                respondSha:true,
+                effect:{
+                  target:function(card,player,target,effect){
+                    if(get.tag(card,'respondSha')) return 0.5;
+                  }
+                }
+              }
+            }
   },
     translate: {
       yuwentai: "宇文泰",
@@ -1034,6 +1132,13 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       yanji_info:'出牌阶段，你可以发动此技能，选择弃置一张装备牌里的马，然后让场上其他角色选择一张牌给你。',
       xunhua:'驯化',
       xunhua_info:'锁定技，你计算与其他角色的距离时-X。（X为场上拥有手牌数的玩家）',
+      guiguzi:'鬼谷子',
+      zongheng:"纵横",
+      zongheng_wuxie:"纵横",
+      zongheng_sha:"纵横",
+      zongheng_shan:"纵横",
+      zongheng_tao:"纵横",
+      zongheng_info:"当你需要进行响应时，你可以打出任意一张手牌进行响应。"
     },
   }
 });
