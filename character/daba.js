@@ -18,7 +18,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             chenshuai: ['male', 'daba', 4, ['feigong', 'jianyu']],
             mushuihan: ['male', 'daba', 4, ['guaishuai', 'guaichu', 'guaimin']],
             huanshi: ['male', 'daba', 4, ['huanxie', 'yaowan']],
-            xukun: ['fmale', 'daba', 4, ['lianxi']],
+            xukun: ['fmale', 'daba', 4, ['lianxi','baozha','baozha2']],
         },
         skill: {
             //赵襄
@@ -1126,7 +1126,8 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 },
             },
 
-            lianxi:{
+            //最爱的坤坤
+            lianxi: {
                 forced: true,
                 trigger: { player: 'phaseZhunbeiBegin' },
                 init: function (player) {
@@ -1134,7 +1135,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 },
                 filter: function (event, player) {
                     const end = new Date().getTime()
-                    return end - player.storage.start > 6000; 
+                    return end - player.storage.start > 150000;
                 },
                 content: function () {
                     player.removeSkill('lianxi')
@@ -1143,14 +1144,78 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             },
             changtiao: {
                 forced: true,
-                target: {
-                    player: 'phaseZhunbeiBegin'
+                mark: true,
+                locked: true,
+                zhuanhuanji: true,
+                marktext: '☯',
+                intro: {
+                    content: function (storage, player, skill) {
+                        if (player.storage.changtiao == true) return '锁定技，阶段开始时，你摸一张牌，然后本阶段内你的杀且无使用次数限制';
+                        return '锁定技，阶段开始时，你摸一张牌，然后本阶段内你的杀无距离限制';
+                    },
                 },
+                trigger: { player: 'phaseZhunbeiBegin' },
                 content: function () {
-                    player.draw();
+                    'step 0'
+                    player.changeZhuanhuanji('changtiao');
+                    player.draw(1);
+                    'step 1'
+                    if (player.storage.changtiao != true) {
+                        player.addTempSkill('changtiao_2', 'phaseUseAfter');
+                    }
+                    else {
+                        player.addTempSkill('changtiao_1', 'phaseUseAfter');
+                    };
 
                 },
-            }
+                subSkill: {
+                    '1': {
+                        mod: {
+                            cardUsable: function (card, player, num) {
+                                return Infinity;
+                            },
+                        },
+                    },
+                    '2': {
+                        mod: {
+                            targetInRange: function (card) {
+                                return true;
+                            },
+                        },
+                    },
+                },
+            },
+            baozha: {
+                trigger: { player: 'phaseUse' },
+                content: function () {
+                    "step 0"
+                    player.chooseTarget(true) // 选择目标
+                    "step 1"
+                    if (result.bool && result.targets && result.targets.length > 0) { // 是否选择了目标
+                        let r = result.targets // 选择的目标数组
+                        // trigger是选择的目标
+                        r[0].addMark("kanyiyan")
+                        if(trigger.player.countMark('kanyiyan') == 2){
+                        trigger.player.loseHp(1);
+                        trigger.player.removeMark('kanyiyan');
+                        trigger.player.removeMark('kanyiyan');
+                        }
+                    }
+                }
+            },
+//            baozha2: {
+//             trigger: { player: 'phaseUse' },
+//                 content: function () {
+//                                 "step 0"
+//                                 player.chooseTarget(true) // 选择目标
+//                                 "step 1"
+//                                 if (result.bool && result.targets && result.targets.length > 0) { // 是否选择了目标
+//                                     let r = result.targets // 选择的目标数组
+//                                     // trigger是选择的目标
+//                                     r[0].addMark("kanyiyan") // 给该角色增加神技
+//                                 }
+//                             }
+//            }
         },
         translate: {
             wuzhaoxiang: '吴赵襄',
@@ -1223,7 +1288,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             baozha: '爆炸',
             baozha_info: '出牌阶段限一次，你可以令一名角色观看你的手牌，然后获得看一眼标记。若此时标记大于1，该角色消除看一眼标记，并进行爆炸。（爆炸：你与你距离为1的角色受到一点伤害）',
             changtiao: '唱跳',
-            changtiao_info: '唱跳：转换技 唱：准备阶段，你摸一张牌，然后本回合使用牌没有距离限制。跳：准备阶段，你弃置一张牌，然后本回合使用牌没有次数限制',
+            changtiao_info: '唱跳：转换技 唱：准备阶段，你摸一张牌，然后本回合使用牌没有距离限制。跳：准备阶段，你摸一张牌，然后本回合使用牌没有次数限制',
         },
     };
 });
