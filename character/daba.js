@@ -18,7 +18,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             chenshuai: ['male', 'daba', 4, ['feigong', 'jianyu']],
             mushuihan: ['male', 'daba', 4, ['guaishuai', 'guaichu', 'guaimin']],
             huanshi: ['male', 'daba', 4, ['huanxie', 'yaowan']],
-            xukun: ['fmale', 'daba', 4, ['lianxi','baozha','baozha2']],
+            xukun: ['fmale', 'daba', 4, ['lianxi', 'baozha', 'baozha2']],
         },
         skill: {
             //赵襄
@@ -1186,36 +1186,35 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 },
             },
             baozha: {
-                trigger: { player: 'phaseUse' },
+                enable: 'phaseUse',
+                usable: 1,
+                  intro:{//标记介绍
+                                        name2:'毒奶',
+                                        content:'已有#个看一眼'
+                                    },
                 content: function () {
                     "step 0"
                     player.chooseTarget(true) // 选择目标
                     "step 1"
                     if (result.bool && result.targets && result.targets.length > 0) { // 是否选择了目标
                         let r = result.targets // 选择的目标数组
+                        r[0].viewHandcards(player)
                         // trigger是选择的目标
-                        r[0].addMark("kanyiyan")
-                        if(trigger.player.countMark('kanyiyan') == 2){
-                        trigger.player.loseHp(1);
-                        trigger.player.removeMark('kanyiyan');
-                        trigger.player.removeMark('kanyiyan');
+                        r[0].addMark("baozha")
+                        if (r[0].countMark('baozha') == 2) {
+                            r[0].damage(1, player, 'fire');
+                            r[0].removeMark('baozha');
+                            r[0].removeMark('baozha');
+                            game.countPlayer(function (target) {
+                                if (r[0] != target && get.distance(r[0], target) <= 1) {
+                                    target.damage(1, r[0], 'fire');
+                                }
+                            });
                         }
                     }
                 }
             },
-//            baozha2: {
-//             trigger: { player: 'phaseUse' },
-//                 content: function () {
-//                                 "step 0"
-//                                 player.chooseTarget(true) // 选择目标
-//                                 "step 1"
-//                                 if (result.bool && result.targets && result.targets.length > 0) { // 是否选择了目标
-//                                     let r = result.targets // 选择的目标数组
-//                                     // trigger是选择的目标
-//                                     r[0].addMark("kanyiyan") // 给该角色增加神技
-//                                 }
-//                             }
-//            }
+
         },
         translate: {
             wuzhaoxiang: '吴赵襄',
@@ -1286,7 +1285,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             lianxi: '练习',
             lianxi_info: '觉醒技，游戏开始时，你进行练习，游戏一分钟相当于一年；当你练习时长2年半后。回合开始阶段，你获得“唱跳”。',
             baozha: '爆炸',
-            baozha_info: '出牌阶段限一次，你可以令一名角色观看你的手牌，然后获得看一眼标记。若此时标记大于1，该角色消除看一眼标记，并进行爆炸。（爆炸：你与你距离为1的角色受到一点伤害）',
+            baozha_info: '出牌阶段限一次，你可以令一名角色观看你的手牌，然后获得看一眼标记。若此时标记大于1，该角色消除看一眼标记，然后该角色进行爆炸。（爆炸：你对与你距离为1的角色（包括你）造成一点火焰伤害）',
             changtiao: '唱跳',
             changtiao_info: '唱跳：转换技 唱：准备阶段，你摸一张牌，然后本回合使用牌没有距离限制。跳：准备阶段，你摸一张牌，然后本回合使用牌没有次数限制',
         },
