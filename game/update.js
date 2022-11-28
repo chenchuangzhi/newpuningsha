@@ -1,9 +1,9 @@
 window.noname_update={
-	version:'1.9.116.13',
+	version:'1.9.116.14',
 	update:'1.9.116.0',
 	changeLog:[
 		'修复鬼谷子在自己回合内死亡不能使用纵横的情况',
-		'更新蔡徐坤',
+		'更新蔡徐坤、张东升',
 	],
 	files:[
 	'extension/十周年UI/extension.js',

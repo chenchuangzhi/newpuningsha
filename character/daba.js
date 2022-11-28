@@ -19,6 +19,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             mushuihan: ['male', 'daba', 4, ['guaishuai', 'guaichu', 'guaimin']],
             huanshi: ['male', 'daba', 4, ['huanxie', 'yaowan']],
             xukun: ['fmale', 'daba', 4, ['lianxi', 'baozha', 'baozha2']],
+            dongsheng: ['male', 'daba', 4, ['pashan']],
         },
         skill: {
             //赵襄
@@ -1188,10 +1189,10 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             baozha: {
                 enable: 'phaseUse',
                 usable: 1,
-                  intro:{//标记介绍
-                                        name2:'毒奶',
-                                        content:'已有#个看一眼'
-                                    },
+                intro: {//标记介绍
+                    name2: '毒奶',
+                    content: '已有#个看一眼'
+                },
                 content: function () {
                     "step 0"
                     player.chooseTarget(true) // 选择目标
@@ -1214,6 +1215,76 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                     }
                 }
             },
+
+            //张东升
+            "pashan": {
+
+                trigger: {
+                    player: "useCardEnd"
+                },
+                direct: true,
+                filter: function (event, player) {
+                    var num = get.number(event.card) || 13;
+                    return player.hasCard(function (card) {
+                        return get.number(card) > num;
+                    }, 'he');
+                },
+                content: function () {
+                    "step 0"
+                    var next = player.chooseCard(
+                        'he',
+                        function (card, player, event) {
+                            return get.number(card) > _status.event.number;
+                        },
+                        function (card) {
+                            return 13 - get.number(card) - get.value(card) / 2;
+                        }
+                    );
+                    next.set('prompt', get.prompt2('pashan'));
+                    next.set('number', get.number(trigger.card));
+                    "step 1"
+                    if (result.bool) {
+                        player.logSkill('pashan');
+                        player.loseToDiscardpile(result.cards);
+                        player.draw(result.cards.length);
+                        player.storage['pashan'] = get.number(result.cards[0]);
+                        player.addTempSkill('pashan_shun');
+                    }
+                },
+                subSkill: {
+                    shun: {
+                        onremove: true,
+                        trigger: {
+                            player: "useCardToBegin"
+                        },
+                        direct: true,
+                        content: function () {
+                            "step 0"
+                            if (get.number(trigger.card) <= player.storage['pashan']) {
+                                event.finish();
+                            }
+                            player.removeSkill('pashan_shun');
+                            "step 1"
+                            var next = player.chooseTarget(
+                                function (card, player, target) {
+                                    return player != target && target.countGainableCards(player, 'h');
+                                },
+                                function (target) {
+                                    return -get.player().attitudeTo(target) / (target.countCards('h') + 1);
+                                }
+                            );
+                            next.set('prompt', '爬山：你可以获得其他角色一张手牌');
+                            "step 2"
+                            if (result.bool) {
+                                player.logSkill('pashan', result.targets);
+                                player.gainPlayerCard(result.targets[0], 'h', true);
+                            }
+                        },
+                        sub: true
+                    }
+                }
+            },
+
 
         },
         translate: {
@@ -1288,6 +1359,11 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             baozha_info: '出牌阶段限一次，你可以令一名角色观看你的手牌，然后获得看一眼标记。若此时标记大于1，该角色消除看一眼标记，然后该角色进行爆炸。（爆炸：你对与你距离为1的角色（包括你）造成一点火焰伤害）',
             changtiao: '唱跳',
             changtiao_info: '唱跳：转换技 唱：准备阶段，你摸一张牌，然后本回合使用牌没有距离限制。跳：准备阶段，你摸一张牌，然后本回合使用牌没有次数限制',
+            dongsheng: '张东升',
+            pashan: '爬山',
+            pashan_info: '你使用一张牌后，可以重铸一张点数更大的牌。你本回合使用的下一张牌时，若之点数大于该次重铸掉的牌，你可以获得一名其他角色一张手牌',
+            //            az2:'啊这2',
+            //            az2_info:'当一名角色跳过某一阶段时，你可令一名角色执行一个额外的对应阶段；当一名角色从背面翻回正面时，你可令一名角色执行一个额外回合。',
         },
     };
 });
