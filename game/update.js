@@ -7,6 +7,7 @@ window.noname_update={
 	],
 	files:[
 	'extension/十周年UI/extension.js',
+	'image/character/dongsheng.jpg',
 	'image/character/xukun.jpg',
 	'image/character/bol_caocao.jpg',
 	'image/character/bol_huanggai.jpg',
