@@ -18,8 +18,9 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             chenshuai: ['male', 'daba', 4, ['feigong', 'jianyu']],
             mushuihan: ['male', 'daba', 4, ['guaishuai', 'guaichu', 'guaimin']],
             huanshi: ['male', 'daba', 4, ['huanxie', 'yaowan']],
-            xukun: ['fmale', 'daba', 4, ['lianxi', 'baozha', 'baozha2']],
+            xukun: ['fmale', 'daba', 4, ['lianxi', 'baozha']],
             dongsheng: ['male', 'daba', 4, ['pashan']],
+            zhuangzhou: ['male', 'daba', 3, ['jiekong', 'miankong']]
         },
         skill: {
             //赵襄
@@ -1265,27 +1266,96 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                             }
                             player.removeSkill('pashan_shun');
                             player.draw(1);
-//                            "step 1"
-//                            var next = player.chooseTarget(
-//                                function (card, player, target) {
-//                                    return player != target && target.countGainableCards(player, 'h');
-//                                },
-//                                function (target) {
-//                                    return -get.player().attitudeTo(target) / (target.countCards('h') + 1);
-//                                }
-//                            );
-//                            next.set('prompt', '爬山：你可以获得其他角色一张手牌');
-//                            "step 2"
-//                            if (result.bool) {
-//                                player.logSkill('pashan', result.targets);
-//                                player.gainPlayerCard(result.targets[0], 'h', true);
-//                            }
+                            //                            "step 1"
+                            //                            var next = player.chooseTarget(
+                            //                                function (card, player, target) {
+                            //                                    return player != target && target.countGainableCards(player, 'h');
+                            //                                },
+                            //                                function (target) {
+                            //                                    return -get.player().attitudeTo(target) / (target.countCards('h') + 1);
+                            //                                }
+                            //                            );
+                            //                            next.set('prompt', '爬山：你可以获得其他角色一张手牌');
+                            //                            "step 2"
+                            //                            if (result.bool) {
+                            //                                player.logSkill('pashan', result.targets);
+                            //                                player.gainPlayerCard(result.targets[0], 'h', true);
+                            //                            }
                         },
                         sub: true
                     }
                 }
             },
 
+            //庄周
+            "jiekong": {
+                group: ["jiekong_skip"],
+                subSkill: {
+                    skip: {
+                        trigger: {
+                            global: ["phaseDiscardSkipped", "phaseJudgeSkipped", "phaseDrawSkipped", "phaseUseSkipped", "turnOverAfter"],
+                        },
+                        direct: true,
+                        filter: function (event, player) {
+                            if (event.name == "turnOver") return !event.player.isTurnedOver();
+                            return true;
+                        },
+                        content: function () {
+                            'step 0'
+                            switch (event.triggername) {
+                                case 'phaseJudgeSkipped':
+                                    var str = '判定';
+                                    break;
+                                case 'phaseDrawSkipped':
+                                    var str = '摸牌';
+                                    break;
+                                case 'phaseUseSkipped':
+                                    var str = '出牌';
+                                    break;
+                                case 'phaseDiscardSkipped':
+                                    var str = '弃牌';
+                                    break;
+                                case 'turnOverAfter':
+                                    var str = '回合';
+                                    break;
+                            }
+                            player.chooseTarget(get.prompt('jiekong'), '令一名角色执行一个额外的' + str + (str == "回合" ? "" : '阶段'), false).set('skipped', event.triggername);
+                            'step 1'
+                            if (result.bool) {
+                                var target = result.targets[0];
+                                var skipped = trigger.name == "turnOver" ? "phase" : event.triggername.slice(0, -7);
+                                player.logSkill('jiekong', target);
+                                target[skipped]();
+                            }
+                        },
+                        sub: true,
+                    },
+                },
+            },
+
+            "miankong": {
+                trigger: {
+                    target: ["rewriteGainResult", "rewriteDiscardResult"],
+                },
+                direct: true,
+                preHidden: true,
+                filter: function (event, player) {
+                    return event.player != player;
+                },
+                content: function () {
+                    'step 0'
+                    trigger.cancel()
+                    'step 1'
+                    if (event.triggername == 'rewriteGainResult') {
+                        trigger.player.draw()
+                    } else {
+                        var card = get.cards()
+                        trigger.player.lose(card, ui.discardPile);
+                        trigger.player.$throw(card, 1000);
+                        game.log(card, '进入了弃牌堆');
+                    }
+                },
+            },
 
         },
         translate: {
@@ -1363,8 +1433,13 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             dongsheng: '张东升',
             pashan: '爬山',
             pashan_info: '你使用一张牌后，可以重铸一张点数更大的牌。你本回合使用的下一张牌时，若之点数大于该次重铸掉的牌，你摸一张牌',
-            //            az2:'啊这2',
-            //            az2_info:'当一名角色跳过某一阶段时，你可令一名角色执行一个额外的对应阶段；当一名角色从背面翻回正面时，你可令一名角色执行一个额外回合。',
+            zhuangzhou: '庄周',
+            jiekong: '解控',
+            jiekong_info: '当一名角色跳过某一阶段时，你可令一名角色执行一个额外的对应阶段；当一名角色从背面翻回正面时，你可令一名角色执行一个额外回合。',
+            //            dieshang:'叠伤',
+            //            dieshang_info:'当你对一名角色造成x+1次伤害后，你的杀对其造成的伤害永久加1（x为对该角色加伤害的点数）',
+            miankong: '免控',
+            miankong_info: '锁定技，当其他角色获得/弃置你的牌时，改为摸一张牌/将牌堆顶一张牌置于弃牌堆',
         },
     };
 });
