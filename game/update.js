@@ -1,11 +1,13 @@
 window.noname_update={
-	version:'1.9.116.14',
+	version:'1.9.116.15',
 	update:'1.9.116.0',
 	changeLog:[
-		'修复鬼谷子在自己回合内死亡不能使用纵横的情况',
-		'更新蔡徐坤、张东升',
+		'修复原生无名杀使用手杀ui扩展的bug',
+		'更新蔡徐坤、张东升，鬼谷子',
 	],
 	files:[
+	'extension/手杀ui/lbtn/main1_mobile.css',
+	'extension/手杀ui/extension.js',
 	'extension/十周年UI/extension.js',
 	'image/character/dongsheng.jpg',
 	'image/character/xukun.jpg',
