@@ -1,5 +1,5 @@
 window.noname_asset_list=[
-	'v1.9.116.3',
+	'v1.9.116.4',
 	'audio/background/aozhan_chaoming.mp3',
 	'audio/background/aozhan_online.mp3',
 	'audio/background/aozhan_rewrite.mp3',
@@ -7273,6 +7273,7 @@ window.noname_asset_list=[
 	'image/splash/huanhuazhizhan.jpg',
 	'image/splash/th_mougong.jpg',
 	'image/splash/paiwei.jpg',
+    'image/character/kunkun.jpg',
 
 	'audio/skill/_neiTequan.mp3',
 	'audio/skill/_useAnger.mp3'
