@@ -1264,21 +1264,22 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                                 event.finish();
                             }
                             player.removeSkill('pashan_shun');
-                            "step 1"
-                            var next = player.chooseTarget(
-                                function (card, player, target) {
-                                    return player != target && target.countGainableCards(player, 'h');
-                                },
-                                function (target) {
-                                    return -get.player().attitudeTo(target) / (target.countCards('h') + 1);
-                                }
-                            );
-                            next.set('prompt', '爬山：你可以获得其他角色一张手牌');
-                            "step 2"
-                            if (result.bool) {
-                                player.logSkill('pashan', result.targets);
-                                player.gainPlayerCard(result.targets[0], 'h', true);
-                            }
+                            player.draw(1);
+//                            "step 1"
+//                            var next = player.chooseTarget(
+//                                function (card, player, target) {
+//                                    return player != target && target.countGainableCards(player, 'h');
+//                                },
+//                                function (target) {
+//                                    return -get.player().attitudeTo(target) / (target.countCards('h') + 1);
+//                                }
+//                            );
+//                            next.set('prompt', '爬山：你可以获得其他角色一张手牌');
+//                            "step 2"
+//                            if (result.bool) {
+//                                player.logSkill('pashan', result.targets);
+//                                player.gainPlayerCard(result.targets[0], 'h', true);
+//                            }
                         },
                         sub: true
                     }
@@ -1361,7 +1362,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             changtiao_info: '唱跳：转换技 唱：准备阶段，你摸一张牌，然后本回合使用牌没有距离限制。跳：准备阶段，你摸一张牌，然后本回合使用牌没有次数限制',
             dongsheng: '张东升',
             pashan: '爬山',
-            pashan_info: '你使用一张牌后，可以重铸一张点数更大的牌。你本回合使用的下一张牌时，若之点数大于该次重铸掉的牌，你可以获得一名其他角色一张手牌',
+            pashan_info: '你使用一张牌后，可以重铸一张点数更大的牌。你本回合使用的下一张牌时，若之点数大于该次重铸掉的牌，你摸一张牌',
             //            az2:'啊这2',
             //            az2_info:'当一名角色跳过某一阶段时，你可令一名角色执行一个额外的对应阶段；当一名角色从背面翻回正面时，你可令一名角色执行一个额外回合。',
         },
