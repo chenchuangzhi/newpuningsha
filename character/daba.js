@@ -1427,7 +1427,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 content: function () {
                     player.turnOver();
                     player.recover(2);
-                    player..discard(player.getCards('h'));
+                    player.discard(player.getCards('h'));
                 },
 
             }
