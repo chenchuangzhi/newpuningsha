@@ -21,6 +21,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             xukun: ['fmale', 'daba', 4, ['lianxi', 'baozha']],
             dongsheng: ['male', 'daba', 4, ['pashan']],
             zhuangzhou: ['male', 'daba', 4, ['jiekong', 'miankong']],
+            yadianna: ['female', 'daba', 4, ['bugui', 'shiye','wuquan']],
         },
         skill: {
             //赵襄
@@ -1357,6 +1358,81 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 },
             },
 
+            //雅典娜
+            "bugui": {
+                group: ["bugui_1", "bugui_2"],
+                isCanDraw: function (player) {
+                    var huase = lib.suit.every(function (suit) {
+                        return player.hasCard(function (card) {
+                            return get.suit(card) == suit;
+                        }, "h");
+                    })
+                    return (player.countCards('h') < 6 && !huase)
+                },
+                subSkill: {
+                    "1": {
+
+                        trigger: {
+                            player: ["phaseZhunbeiBegin", "phaseJudgeBefore", "phaseDrawBefore", "phaseDiscardBefore", "phaseJieshuBegin"],
+                        },
+                        forced: true,
+                        content: function () {
+                            trigger.cancel();
+                        },
+                        sub: true,
+                    },
+                    "2": {
+                        trigger: {
+                            player: "phaseUseEnd",
+                        },
+                        frequent: true,
+                        filter: function (event, player) {
+                            return lib.skill.bugui.isCanDraw(player)
+                        },
+                        content: function () {
+                            'step 0'
+                            player.draw(1);
+                            'step 1'
+                            if (lib.skill.bugui.isCanDraw(player)) event.goto(0)
+                        },
+                        sub: true,
+                    },
+                },
+            },
+
+            shiye: {
+                trigger: {
+                    player: "dying",
+                },
+                content: function () {
+                    "step 0"
+                    player.chooseTarget(get.distance(player, target) <= 1);
+                    "step 1"
+                    if (result.bool) {
+                        let r = result.targets // 选择的目标数组
+                        r[0].addSkill('nszhaoxin')
+                        player.removeSkill('shiye');
+                    }
+                },
+            },
+
+            wuquan: {
+                trigger: {
+                    player: "dying",
+                },
+                filter: function (event, player) {
+                    return !player.isTurnedOver();
+                },
+
+                content: function () {
+                    player.turnOver();
+                    player.recover(2);
+                    player..discard(player.getCards('h'));
+                },
+
+            }
+
+
         },
         translate: {
             wuzhaoxiang: '吴赵襄',
@@ -1440,6 +1516,13 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             //            dieshang_info:'当你对一名角色造成x+1次伤害后，你的杀对其造成的伤害永久加1（x为对该角色加伤害的点数）',
             miankong: '免控',
             miankong_info: '锁定技，当其他角色获得/弃置你的牌时，改为摸一张牌/将牌堆顶一张牌置于弃牌堆',
+            yadianna: '雅典娜',
+            bugui: "不归",
+            bugui_info: "锁定技，你只有出牌阶段（其余阶段均跳过）。出牌阶段结束后，你从牌堆底摸牌至手牌中的花色数为4或手牌数为6",
+            shiye: '视野',
+            shiye_info: '限定技，当你进入濒死状态，你可以选择一名距离为1的角色，其获得技能昭心（锁定技，你始终展示手牌）',
+            wuquan: '无泉',
+            wuquan_info: '锁定技，当你进入濒死状态，若你正面朝上，则回两点体力并翻面，然后弃置所有手牌',
         },
     };
 });
