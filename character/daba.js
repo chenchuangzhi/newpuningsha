@@ -1426,7 +1426,10 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
 
                 content: function () {
                     player.turnOver();
-                    player.recover(2);
+                    var a = game.countPlayer() - 1;
+                    if(a>3)
+                    a=3;
+                    player.recover(a);
                     player.discard(player.getCards('h'));
                 },
 
@@ -1522,7 +1525,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             shiye: '视野',
             shiye_info: '限定技，当你进入濒死状态，你可以选择一名距离为1的角色，其获得技能昭心（锁定技，你始终展示手牌）',
             wuquan: '无泉',
-            wuquan_info: '锁定技，当你进入濒死状态，若你正面朝上，则回两点体力并翻面，然后弃置所有手牌',
+            wuquan_info: '锁定技，当你进入濒死状态，若你正面朝上，则回x点体力并翻面，然后弃置所有手牌(x为场上存活的角色且最多为3)',
         },
     };
 });
