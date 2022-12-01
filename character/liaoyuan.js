@@ -1144,7 +1144,6 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
                   trigger:{global:'judgeEnd'},
                   forced:true,
                   filter:function(event,player){
-                    debugger
                     return event.result.suit=='spade' && event.cardname == 'shandian';
                   },
                   content:function(){
