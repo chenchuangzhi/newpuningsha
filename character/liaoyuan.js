@@ -15,7 +15,8 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       yuyanjia:["female","liaoyuan2",3,['yuyan1','duanyan1']],
       dachu:['male','liaoyuan2',4,['dunai','douguaishiming']],
       gaohuan:['male','liaoyuan2',4,['yanji','xunhua']],
-      guiguzi:['male','liaoyuan2',3,['zongheng']]
+      guiguzi:['male','liaoyuan2',3,['zongheng']],
+      zhousi:['male','liaoyuan2',4,['leishen','tianlei']]
     },
     skill: {
       wuzhuang: {
@@ -1061,15 +1062,109 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
                 }
               },
             },
-            test:{
-              trigger:{
-                player:"phaseZhunbeiBegin"
+            leishenchui_skill:{
+                charlotte:true,
+                trigger:{source:'damageBegin1'},
+                forced:true,
+                mark:true,
+                content:function(){
+                  trigger.nature='thunder';
+                },
+                marktext:'⚡',
+                intro:{
+                  content:'造成的伤害改为雷属性',
+                },
+            },
+            leishen:{
+              trigger:{player:'damageBegin4'},
+              filter:function(event){
+                return event.nature=='thunder';
               },
               forced:true,
               content:function(){
-                player.loseHp(4)
+                trigger.cancel();
+              },
+              ai:{
+                nofire:true,
+                effect:{
+                  target:function(card,player,target,current){
+                    if(get.tag(card,'thunderDamage')) return 'zerotarget';
+                  }
+                }
+              },
+              group:'leishen_chui',
+              subSkill:{
+                chui:{
+                  trigger: {
+                    global: "gameDrawAfter",
+                    player: "enterGame",
+                },
+                forced:true,
+                content:function(){
+                  var card;
+                  if(!lib.inpile.contains('leishenchui')){
+                    card=game.createCard2('leishenchui','spade',9);
+                    lib.inpile.push('leishenchui');
+                  }else card=get.cardPile(function(card){
+                    return card.name=='leishenchui';
+                  });
+                  player.chooseUseTarget(card,true,'nopopup');
+                }
+                }
+              }
+            },
+            tianlei:{
+              group:["tianlei_1","tianlei_2"],
+              subSkill:{
+                1:{
+                  trigger: { player: "damageEnd" },
+                  content:function(){
+                    "step 0"
+                    player.chooseTarget(get.prompt2('tianlei'),1,function(card,player,target){
+                      return !target.hasJudge('shandian')
+                    }).set('animate',false).set('ai',function(target){
+                      var att=get.attitude(player,target);
+                      return -att;
+                    });
+                    "step 1"
+                    if(result.bool){
+                      var target=result.targets[0];
+                      target.addJudge(game.createCard('shandian'));
+                    }
+                  },
+                  ai:{
+                    effect:{
+                      target:function(card,player,target){
+                        if(get.tag(card,'damage')) return [1,1];
+                      }
+                    }
+                  }
+                },
+                2:{
+                  trigger:{global:'judgeEnd'},
+                  forced:true,
+                  filter:function(event,player){
+                    debugger
+                    return event.result.suit=='spade' && event.cardname == 'shandian';
+                  },
+                  content:function(){
+                    player.draw();
+                  }
+                },
               }
             }
+  },
+  card:{
+    leishenchui:{
+      fullskin:true,
+      suit:'spade',
+      number:9,
+      derivation:'zhousi',
+      type:'equip',
+      subtype:'equip1',
+      distance:{attackFrom:-4},
+      skills:['leishenchui_skill'],
+    },
   },
     translate: {
       yuwentai: "宇文泰",
@@ -1148,8 +1243,13 @@ game.import("character", function (lib, game, ui, get, ai, _status) {
       zongheng_shan:"纵横",
       zongheng_tao:"纵横",
       zongheng_info:"当你需要进行响应时，你可以打出任意一张手牌进行响应。",
-      test:"测试",
-      test_info:"测试使用"
+      zhousi:'宙斯',
+      leishen:'雷神',
+      leishen_info:'锁定技。你免疫所有雷电伤害。且游戏开始时，你装备着【雷神之锤】。',
+      leishenchui:'雷神之锤',
+      leishenchui_info:'你造成的伤害均视为雷电伤害',
+      tianlei:'天雷',
+      tianlei_info:'当你受到伤害后，你可以指定一名角色，视为往其判定区添加一张【闪电】。当场上有闪电进行判定时，若判定结果为♠️，则你摸一张牌。',
     },
   }
 });
