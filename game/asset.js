@@ -1,5 +1,5 @@
 window.noname_asset_list=[
-	'v1.9.116.4',
+	'v1.9.116.5',
 	'audio/background/aozhan_chaoming.mp3',
 	'audio/background/aozhan_online.mp3',
 	'audio/background/aozhan_rewrite.mp3',
@@ -1462,6 +1462,7 @@ window.noname_asset_list=[
 	'audio/skill/diaoling2.mp3',
 	'audio/skill/difa1.mp3',
 	'audio/skill/difa2.mp3',
+	'audio/skill/pashan.mp3',
 	'audio/skill/dili_chigang1.mp3',
 	'audio/skill/dili_chigang2.mp3',
 	'audio/skill/dili_jiaohui1.mp3',
