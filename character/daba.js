@@ -21,7 +21,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             xukun: ['fmale', 'daba', 4, ['lianxi', 'baozha']],
             dongsheng: ['male', 'daba', 4, ['pashan']],
             zhuangzhou: ['male', 'daba', 4, ['jiekong', 'miankong']],
-            yadianna: ['female', 'daba', 4, ['bugui', 'shiye','wuquan']],
+            yadianna: ['female', 'daba', 4, ['bugui', 'shiye', 'wuquan']],
         },
         skill: {
             //赵襄
@@ -1267,21 +1267,6 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                             }
                             player.removeSkill('pashan_shun');
                             player.draw(1);
-                            //                            "step 1"
-                            //                            var next = player.chooseTarget(
-                            //                                function (card, player, target) {
-                            //                                    return player != target && target.countGainableCards(player, 'h');
-                            //                                },
-                            //                                function (target) {
-                            //                                    return -get.player().attitudeTo(target) / (target.countCards('h') + 1);
-                            //                                }
-                            //                            );
-                            //                            next.set('prompt', '爬山：你可以获得其他角色一张手牌');
-                            //                            "step 2"
-                            //                            if (result.bool) {
-                            //                                player.logSkill('pashan', result.targets);
-                            //                                player.gainPlayerCard(result.targets[0], 'h', true);
-                            //                            }
                         },
                         sub: true
                     }
@@ -1294,7 +1279,8 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 subSkill: {
                     skip: {
                         trigger: {
-                            global: ["phaseDiscardSkipped", "phaseJudgeSkipped", "phaseDrawSkipped", "phaseUseSkipped", "turnOverAfter"],
+                            global: ["phaseDiscardSkipped","phaseDiscardCancelled", 'phaseDrawCancelled', "phaseJudgeSkipped", "phaseDrawSkipped",
+                                "phaseUseSkipped","phaseUseCancelled", "turnOverAfter"],
                         },
                         direct: true,
                         filter: function (event, player) {
@@ -1302,31 +1288,48 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                             return true;
                         },
                         content: function () {
+                            var a = 0;
                             'step 0'
                             switch (event.triggername) {
                                 case 'phaseJudgeSkipped':
                                     var str = '判定';
+
                                     break;
+                                case 'phaseDrawCancelled':
                                 case 'phaseDrawSkipped':
                                     var str = '摸牌';
                                     break;
+                                case 'phaseUseCancelled':
                                 case 'phaseUseSkipped':
                                     var str = '出牌';
                                     break;
+                                case 'phaseDiscardCancelled':
                                 case 'phaseDiscardSkipped':
                                     var str = '弃牌';
+
                                     break;
                                 case 'turnOverAfter':
                                     var str = '回合';
+
                                     break;
                             }
-                            player.chooseTarget(get.prompt('jiekong'), '令一名角色执行一个额外的' + str + (str == "回合" ? "" : '阶段'), false).set('skipped', event.triggername);
+                            var a = event.triggername.slice(-9);
+                            if (a == "Cancelled")
+                                a = 1;
+                            if (a == 0)
+                                player.chooseTarget(get.prompt('jiekong'), '令一名角色执行一个额外的' + str + (str == "回合" ? "" : '阶段'), false).set('skipped', event.triggername);
+                            if (a == 1)
+                                player.chooseTarget(get.prompt('jiekong'), '令一名角色执行一个额外的' + str + (str == "回合" ? "" : '阶段'), false).set('cancelled', event.triggername);
                             'step 1'
                             if (result.bool) {
                                 var target = result.targets[0];
                                 var skipped = trigger.name == "turnOver" ? "phase" : event.triggername.slice(0, -7);
+                                var a = event.triggername.slice(-9);
+                                if (a == "Cancelled")
+                                    skipped = event.triggername.slice(0, -9);
                                 player.logSkill('jiekong', target);
                                 target[skipped]();
+                                target[cancelled]();
                             }
                         },
                         sub: true,
@@ -1427,8 +1430,8 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 content: function () {
                     player.turnOver();
                     var a = game.countPlayer() - 1;
-                    if(a>3)
-                    a=3;
+                    if (a > 3)
+                        a = 3;
                     player.recover(a);
                     player.discard(player.getCards('h'));
                 },
