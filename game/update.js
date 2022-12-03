@@ -1,5 +1,5 @@
 window.noname_update={
-	version:'1.9.116.22',
+	version:'1.9.116.23',
 	update:'1.9.116.0',
 	changeLog:[
 		'修复原生无名杀使用手杀ui扩展的bug',

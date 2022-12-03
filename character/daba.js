@@ -22,7 +22,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             dongsheng: ['male', 'daba', 4, ['pashan']],
             zhuangzhou: ['male', 'daba', 4, ['jiekong', 'miankong']],
             yadianna: ['female', 'daba', 4, ['bugui', 'shiye', 'wuquan']],
-            mositima: ['female', 'daba', 4, ['xushi']],
+            mositima: ['female', 'daba', 3, ['xushi']],
         },
         skill: {
             //赵襄
