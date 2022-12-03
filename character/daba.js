@@ -22,7 +22,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             dongsheng: ['male', 'daba', 4, ['pashan']],
             zhuangzhou: ['male', 'daba', 4, ['jiekong', 'miankong']],
             yadianna: ['female', 'daba', 4, ['bugui', 'shiye', 'wuquan']],
-            mositima: ['female', 'daba', 3, ['xushi']],
+            mositima: ['female', 'daba', 4, ['xushi']],
         },
         skill: {
             //赵襄
@@ -1460,17 +1460,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                         event.finish();
                     }
                     "step 6"
-                    trigger.player.phaseZhunbei();
-                    "step 7"
-                    trigger.player.phaseJudge();
-                    "step 8"
-                    trigger.player.phaseDraw();
-                    "step 9"
                     trigger.player.phaseUse();
-                    "step 10"
-                    trigger.player.phaseDiscard();
-                    "step 11"
-                    trigger.player.phaseJieshu();
                 }
             },
 
@@ -1566,7 +1556,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             wuquan_info: '锁定技，当你进入濒死状态，若你正面朝上，则回x点体力并翻面，然后弃置所有手牌(x为场上存活的角色且最多为3)',
             mositima: '莫斯提马',
             xushi: '序匙',
-            xushi_info: '锁定技，当你存活时，全场的回合是逆序的。你的逆序回合结束后，获得一个额外的正序回合'
+            xushi_info: '锁定技，当你存活时，全场的回合是逆序的。你的逆序回合结束后，获得一个额外的出牌阶段'
         },
     };
 });
