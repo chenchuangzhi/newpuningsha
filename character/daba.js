@@ -1443,24 +1443,16 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 forced: true,
                 trigger: { global: "phaseBefore" },
                 content: function () {
-                    "step 0"
                     trigger.cancel();
                     trigger.player.phaseJieshu();
-                    "step 1"
                     trigger.player.phaseDiscard();
-                    "step 2"
                     trigger.player.phaseUse();
-                    "step 3"
                     trigger.player.phaseDraw();
-                    "step 4"
                     trigger.player.phaseJudge();
-                    "step 5"
                     trigger.player.phaseZhunbei();
-                    if (trigger.player != player) {
-                        event.finish();
+                    if (trigger.player == player) {
+                       player.phaseUse();
                     }
-                    "step 6"
-                    trigger.player.phaseUse();
                 }
             },
 
