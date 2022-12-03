@@ -1,9 +1,9 @@
 window.noname_update={
-	version:'1.9.116.21',
+	version:'1.9.116.22',
 	update:'1.9.116.0',
 	changeLog:[
 		'修复原生无名杀使用手杀ui扩展的bug',
-		'更新蔡徐坤、张东升，鬼谷子,庄周,雅典娜,宙斯',
+		'更新蔡徐坤、张东升，鬼谷子,庄周,雅典娜,宙斯,莫斯提马',
 	],
 	files:[
 	'extension/手杀ui/lbtn/main1.js',

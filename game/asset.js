@@ -7275,6 +7275,7 @@ window.noname_asset_list=[
 	'image/splash/th_mougong.jpg',
 	'image/splash/paiwei.jpg',
     'image/character/kunkun.jpg',
+     'image/character/mositima.jpg',
 
 	'audio/skill/_neiTequan.mp3',
 	'audio/skill/_useAnger.mp3'

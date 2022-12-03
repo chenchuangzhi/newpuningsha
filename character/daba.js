@@ -22,6 +22,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             dongsheng: ['male', 'daba', 4, ['pashan']],
             zhuangzhou: ['male', 'daba', 4, ['jiekong', 'miankong']],
             yadianna: ['female', 'daba', 4, ['bugui', 'shiye', 'wuquan']],
+            mositima: ['female', 'daba', 4, ['xushi']],
         },
         skill: {
             //赵襄
@@ -1279,8 +1280,8 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 subSkill: {
                     skip: {
                         trigger: {
-                            global: ["phaseDiscardSkipped","phaseDiscardCancelled", 'phaseDrawCancelled', "phaseJudgeSkipped", "phaseDrawSkipped",
-                                "phaseUseSkipped","phaseUseCancelled", "turnOverAfter"],
+                            global: ["phaseDiscardSkipped", "phaseDiscardCancelled", 'phaseDrawCancelled', "phaseJudgeSkipped", "phaseDrawSkipped",
+                                "phaseUseSkipped", "phaseUseCancelled", "turnOverAfter"],
                         },
                         direct: true,
                         filter: function (event, player) {
@@ -1436,8 +1437,42 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                     player.discard(player.getCards('h'));
                 },
 
-            }
+            },
 
+            xushi: {
+                forced: true,
+                trigger: { global: "phaseBefore" },
+                content: function () {
+                    "step 0"
+                    trigger.cancel();
+                    trigger.player.phaseJieshu();
+                    "step 1"
+                    trigger.player.phaseDiscard();
+                    "step 2"
+                    trigger.player.phaseUse();
+                    "step 3"
+                    trigger.player.phaseDraw();
+                    "step 4"
+                    trigger.player.phaseJudge();
+                    "step 5"
+                    trigger.player.phaseZhunbei();
+                    if (trigger.player != player) {
+                        event.finish();
+                    }
+                    "step 6"
+                    trigger.player.phaseZhunbei();
+                    "step 7"
+                    trigger.player.phaseJudge();
+                    "step 8"
+                    trigger.player.phaseDraw();
+                    "step 9"
+                    trigger.player.phaseUse();
+                    "step 10"
+                    trigger.player.phaseDiscard();
+                    "step 11"
+                    trigger.player.phaseJieshu();
+                }
+            },
 
         },
         translate: {
@@ -1529,6 +1564,9 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             shiye_info: '限定技，当你进入濒死状态，你可以选择一名距离为1的角色，其获得技能昭心（锁定技，你始终展示手牌）',
             wuquan: '无泉',
             wuquan_info: '锁定技，当你进入濒死状态，若你正面朝上，则回x点体力并翻面，然后弃置所有手牌(x为场上存活的角色且最多为3)',
+            mositima: '莫斯提马',
+            xushi: '序匙',
+            xushi_info: '锁定技，当你存活时，全场的回合是逆序的。你的逆序回合结束后，获得一个额外的正序回合'
         },
     };
 });
