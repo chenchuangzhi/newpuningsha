@@ -1943,7 +1943,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					init:{
 						audio:'olqisi',
 						trigger:{
-							global:'phaseBefore',
+							global: "gameDrawAfter",
 							player:'enterGame',
 						},
 						forced:true,

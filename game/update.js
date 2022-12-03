@@ -1,8 +1,9 @@
 window.noname_update={
-	version:'1.9.116.24',
+	version:'1.9.116.25',
 	update:'1.9.116.0',
 	changeLog:[
-		'修复原生无名杀使用手杀ui扩展的bug',
+	    '浦元bug测试',
+ 		'修复原生无名杀使用手杀ui扩展的bug',
 		'更新蔡徐坤、张东升，鬼谷子,庄周,雅典娜,宙斯,莫斯提马',
 	],
 	files:[
@@ -11,6 +12,8 @@ window.noname_update={
 	'extension/手杀ui/extension.js',
 	'extension/十周年UI/extension.js',
         'character/sb.js',
+        'character/sp.js',
+        'character/sp2.js',
 	    'character/daba.js',
 	    'character/liaoyuan.js',
 		'game/game.js',

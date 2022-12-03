@@ -14908,7 +14908,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			pytianjiang:{
 				audio:2,
 				trigger:{
-					global:'phaseBefore',
+					global: "gameDrawAfter",
 					player:'enterGame',
 				},
 				forced:true,
