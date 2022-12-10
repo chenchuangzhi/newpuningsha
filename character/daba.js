@@ -1443,8 +1443,6 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 forced: true,
                 trigger: { global: "phaseBefore" },
                 content: function () {
-                    let s = trigger.player.stat
-                    if(s.length > 1){
                     trigger.cancel();
                     trigger.player.phaseJieshu();
                     trigger.player.phaseDiscard();
@@ -1454,7 +1452,6 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                     trigger.player.phaseZhunbei();
                     if (trigger.player == player) {
                        player.phaseUse();
-                    }
                     }
                 }
             },
@@ -1551,7 +1548,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             wuquan_info: '锁定技，当你进入濒死状态，若你正面朝上，则回x点体力并翻面，然后弃置所有手牌(x为场上存活的角色且最多为3)',
             mositima: '莫斯提马',
             xushi: '序匙',
-            xushi_info: '锁定技，除首回合外，当你存活时，全场的回合是逆序的。你的逆序回合结束后，获得一个额外的出牌阶段'
+            xushi_info: '锁定技，当你存活时，全场的回合是逆序的。你的逆序回合结束后，获得一个额外的出牌阶段'
         },
     };
 });
