@@ -7276,7 +7276,17 @@ window.noname_asset_list=[
 	'image/splash/paiwei.jpg',
     'image/character/kunkun.jpg',
      'image/character/mositima.jpg',
-
+	'image/character/zhousi.jpg',
+	'image/card/leishenchui.png',
+	'image/character/zhuangzhou.jpg',
+	'image/character/yadianna.jpg',
+	'image/character/dongsheng.jpg',
+	'image/character/xukun.jpg',
+	'image/character/bol_caocao.jpg',
+	'image/character/bol_huanggai.jpg',
+	'image/character/bol_zhouyu.jpg',
+	'image/character/bol_xiahoushi.jpg',
+	'image/character/guiguzi.jpg',
 	'audio/skill/_neiTequan.mp3',
 	'audio/skill/_useAnger.mp3'
 ];
