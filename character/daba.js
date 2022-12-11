@@ -11,7 +11,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             huafalin: ["female", "daba", 3, ["buwen2", "bangneng2", "shenji2"]],
             helage: ["male", "daba", 3, ["xianyue", "qiusheng", "tashijiangjun"]],
             sp_nengtianshi: ["female", "daba", 3, ["sp_guozai", "sp_zhufu"]],
-            xiaozhi: ["male", "daba", 3, ["pika", "penhuo"]],
+            xiaozhi: ["male", "daba", 3, ["pika", "penhuo","xushi"]],
             pikaqiu: ["male", "daba", 3, ["pika_skill"]],
             penhuolong: ["male", "daba", 3, ["penhuo_skill"]],
             xushimin: ['male', 'daba', 4, ['sbliegong', 'biyue']],
@@ -22,7 +22,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             dongsheng: ['male', 'daba', 4, ['pashan']],
             zhuangzhou: ['male', 'daba', 4, ['jiekong', 'miankong']],
             yadianna: ['female', 'daba', 4, ['bugui', 'shiye', 'wuquan']],
-            mositima: ['female', 'daba', 5, ['xushi']],
+            //mositima: ['female', 'daba', 5, ['xushi']],
             zuozhu: ['male', 'daba', 4, ['leiqie', 'baofu']],
         },
         skill: {
@@ -773,12 +773,12 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                     fellow.identity = player.identity;
                     player.storage["pika"] = true
                 },
-                ai: {
-                    order: 6,
-                    result: {
-                        player: 1
-                    }
-                }
+//                ai: {
+//                    order: 6,
+//                    result: {
+//                        player: 1
+//                    }
+//                }
             },
             penhuo_skill: {
                 forced: true,
