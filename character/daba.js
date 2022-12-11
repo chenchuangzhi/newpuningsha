@@ -1455,7 +1455,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             },
 
             "baofu": {
-                group: "baofu_summer",
+                group: ["baofu_summer", "baofu_sha"],
                 mod: {
                     attackFrom: function (from, to, distance, player) {
                         return distance - 1;
@@ -1497,6 +1497,17 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                         },
                         sub: true,
                     },
+                    sha: {
+                        trigger: { player: 'useCard1' },
+                        forced: true,
+                        popup: false,
+                        firstDo: true,
+                        charlotte: true,
+                        content: function () {
+                            if (trigger.card.name == 'sha') trigger.baseDamage+=player.storage.baofu_addsha;
+                        },
+                        sub: true,
+                    },
                 },
             },
 
@@ -1507,10 +1518,6 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 mark: true,
                 content: function () {
                     trigger.nature = 'thunder';
-                    if (trigger.card && trigger.card.name == "sha") {
-                        debugger
-                        trigger.num += player.storage.baofu_addsha;
-                    }
                 },
                 marktext: '⚡',
                 intro: {
@@ -1613,9 +1620,9 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             xushi_info: '锁定技，一名角色的回合开始前，获得一个逆序无摸牌阶段的回合。',
             zuozhu: '佐助',
             baofu: '报复',
-            baofu_info: '锁定技，你的攻击范围+1。当你于回合外受到伤害时，你下回合使用杀的次数+1。',
+            baofu_info: '锁定技，你的攻击范围+1。当你于回合外受到伤害时，你下回合使用杀的次数和伤害+1。',
             leiqie: '雷切',
-            leiqie_info: '锁定技，你造成的伤害均为雷电伤害。当你于回合外受到伤害时，你下回合使用杀伤害+1（别问为什么放这里，问就是技能冲突）',
+            leiqie_info: '锁定技，你造成的伤害均为雷电伤害。',
         },
     };
 });
