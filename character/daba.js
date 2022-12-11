@@ -23,6 +23,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             zhuangzhou: ['male', 'daba', 4, ['jiekong', 'miankong']],
             yadianna: ['female', 'daba', 4, ['bugui', 'shiye', 'wuquan']],
             mositima: ['female', 'daba', 5, ['xushi']],
+            zuozhu: ['male', 'daba', 4, ['leiqie', 'baofu']],
         },
         skill: {
             //赵襄
@@ -1453,6 +1454,70 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 }
             },
 
+            "baofu": {
+                group: "baofu_summer",
+                mod: {
+                    attackFrom: function (from, to, distance, player) {
+                        return distance - 1;
+                    },
+                    cardUsable: function (card, player, num) {
+                        if (card.name == 'sha') return num + player.storage.baofu_addsha;
+                    },
+                },
+                init: function (player) {
+                    player.storage.baofu_addsha = 0;
+                },
+                trigger: {
+                    player: "damageBegin1",
+                },
+                forced: true,
+                content: function () {
+                    if (player != _status.currentPhase) {
+                        player.storage.baofu_addsha += trigger.num;
+                    }
+                },
+                mark: true,
+                marktext: "啊",
+                intro: {
+                    name: "啊这",
+                    content: function (storage, player, skill) {
+                        return "本回合使用杀次数+" + player.storage.baofu_addsha
+                    },
+                },
+                subSkill: {
+                    summer: {
+                        forced: true,
+                        popup: false,
+                        silent: true,
+                        trigger: {
+                            player: "phaseJieshu",
+                        },
+                        content: function () {
+                            player.storage.baofu_addsha = 0;
+                        },
+                        sub: true,
+                    },
+                },
+            },
+
+            leiqie: {
+                charlotte: true,
+                trigger: { source: 'damageBegin1' },
+                forced: true,
+                mark: true,
+                content: function () {
+                    trigger.nature = 'thunder';
+                    if (trigger.card && trigger.card.name == "sha") {
+                        debugger
+                        trigger.num += player.storage.baofu_addsha;
+                    }
+                },
+                marktext: '⚡',
+                intro: {
+                    content: '造成的伤害改为雷属性',
+                },
+            },
+
         },
         translate: {
             wuzhaoxiang: '吴赵襄',
@@ -1545,7 +1610,12 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             wuquan_info: '锁定技，当你进入濒死状态，若你正面朝上，则回x点体力并翻面，然后弃置所有手牌(x为场上存活的角色且最多为3)',
             mositima: '莫斯提马',
             xushi: '序匙',
-            xushi_info: '锁定技，一名角色的回合开始前，获得一个逆序无摸牌阶段的回合。'
+            xushi_info: '锁定技，一名角色的回合开始前，获得一个逆序无摸牌阶段的回合。',
+            zuozhu: '佐助',
+            baofu: '报复',
+            baofu_info: '锁定技，你的攻击范围+1。当你于回合外受到伤害时，你下回合使用杀的次数+1。',
+            leiqie: '雷切',
+            leiqie_info: '锁定技，你造成的伤害均为雷电伤害。当你于回合外受到伤害时，你下回合使用杀伤害+1（别问为什么放这里，问就是技能冲突）',
         },
     };
 });

@@ -7287,6 +7287,7 @@ window.noname_asset_list=[
 	'image/character/bol_zhouyu.jpg',
 	'image/character/bol_xiahoushi.jpg',
 	'image/character/guiguzi.jpg',
+	'image/character/zuozhu.jpg',
 	'audio/skill/_neiTequan.mp3',
 	'audio/skill/_useAnger.mp3'
 ];
