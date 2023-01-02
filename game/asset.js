@@ -7286,9 +7286,12 @@ window.noname_asset_list=[
 	'image/character/bol_huanggai.jpg',
 	'image/character/bol_zhouyu.jpg',
 	'image/character/bol_xiahoushi.jpg',
+	'image/character/bol_shen_zhangfei.jpg',
 	'image/character/guiguzi.jpg',
 	'image/character/zuozhu.jpg',
 	'audio/skill/_neiTequan.mp3',
+	'audio/skill/bolshencai1.mp3',
+	'audio/skill/bolshencai2.mp3',
 	'audio/skill/_useAnger.mp3'
 ];
 window.noname_skin_list={};

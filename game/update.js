@@ -1,9 +1,9 @@
 window.noname_update={
-	version:'1.9.116.31',
+	version:'1.9.116.32',
 	update:'1.9.116.0',
 	changeLog:[
  		'屏蔽莫斯提马，技能移到小智（小智作为联机bug测试）',
-		'更新蔡徐坤、张东升，鬼谷子,庄周,雅典娜,宙斯,莫斯提马，佐助',
+		'更新蔡徐坤、张东升，鬼谷子,庄周,雅典娜,宙斯,莫斯提马，佐助，神张飞',
 	],
 	files:[
 	'extension/手杀ui/lbtn/main1.js',

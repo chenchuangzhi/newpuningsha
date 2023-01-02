@@ -24,6 +24,7 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             yadianna: ['female', 'daba', 4, ['bugui', 'shiye', 'wuquan']],
             //mositima: ['female', 'daba', 5, ['xushi']],
             zuozhu: ['male', 'daba', 4, ['leiqie', 'baofu']],
+            bol_shen_zhangfei:['male','shen',4,['bolshencai','bolxunshi'],['shu']],
         },
         skill: {
             //赵襄
@@ -1525,6 +1526,195 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
                 },
             },
 
+            //技能
+            bolshencai:{
+            derivation:['bolshencai_chi','bolshencai_zhang','bolshencai_tu','bolshencai_liu','bolshencai_die'],
+            enable:'phaseUse',
+            filter:function(event,player){
+            return player.countMark('bolshencai2')<1+player.countMark('bolxunshi');
+            },
+            filterTarget:lib.filter.notMe,
+            content:function(){
+            'step 0'
+            player.addTempSkill('bolshencai2','phaseUseAfter');
+            player.addMark('bolshencai2',1,false);
+            target.judge();
+            'step 1'
+            if(get.position(result.card,true)=='d') player.gain(result.card,'gain2');
+            target.addSkill('bolshencai_effect');
+            event.list=[];
+            var info=lib.translate[result.card.name+'_info'];
+            if(info&&info.indexOf('体力')!=-1) event.list.push('bolshencai_chi');
+            if((info&&info.indexOf('武器')!=-1)||(get.type(result.card)=='equip'&&get.subtype(result.card)=='equip1')) event.list.push('bolshencai_zhang');
+            if(info&&info.indexOf('打出')!=-1) event.list.push('bolshencai_tu');
+            if((info&&info.indexOf('距离')!=-1)||
+            (lib.card[result.card.name].distance&&(lib.card[result.card.name].distance.globalFrom||lib.card[result.card.name].distance.globalTo))
+            ||(lib.card[result.card.name].range&&lib.card[result.card.name].range.global)) event.list.push('bolshencai_liu');
+            'step 2'
+            if(event.list.length){
+            for(var i=0;i<4;i++){
+            var mark=lib.skill.bolshencai.derivation[i];
+            if(target.hasMark(mark)){
+            target.removeMark(mark,target.countMark(mark));
+            target.unmarkSkill(mark);
+            }
+            }
+            for(var i of event.list) target.addMark(i,1);
+            event.finish();
+            }
+            else target.addMark('bolshencai_die',1);
+            'step 3'
+            player.gainPlayerCard(target,'hej',true);
+            },
+            ai:{
+            order:7,
+            result:{
+            target:function(player,target){
+            return target.countCards('he')?-2:-1;
+            },
+            },
+            },
+            subSkill:{
+            effect:{
+            charlotte:true,
+            group:['bolshencai_chi','bolshencai_zhang','bolshencai_tu','bolshencai_liu','bolshencai_die'],
+            },
+            chi:{
+            mark:true,
+            intro:{content:()=>lib.translate.bolshencai_chi_info},
+            charlotte:true,
+            trigger:{player:'damageEnd'},
+            filter:function(event,player){
+            return player.hasMark('bolshencai_chi');
+            },
+            direct:true,
+            content:function(){
+            player.loseHp(trigger.num);
+            },
+            },
+            zhang:{
+            mark:true,
+            intro:{content:()=>lib.translate.bolshencai_zhang_info},
+            charlotte:true,
+            trigger:{global:'useCard'},
+            filter:function(event,player){
+            return player.hasMark('bolshencai_zhang')&&event.card.name=='sha';
+            },
+            direct:true,
+            content:function(){
+            trigger.directHit.push(player);
+            },
+            },
+            tu:{
+            mark:true,
+            intro:{content:()=>lib.translate.bolshencai_tu_info},
+            charlotte:true,
+            trigger:{player:'loseAfter',global:'loseAsyncAfter'},
+            filter:function(event,player){
+            return player.hasMark('bolshencai_tu')&&player.countCards('h')&&event.getParent(2).name!='bolshencai_tu'&&event.getl(player).cards2.length>0;
+            },
+            direct:true,
+            content:function(){
+            player.discard(player.getCards('h').randomGet());
+            },
+            },
+            liu:{
+            mark:true,
+            intro:{content:()=>lib.translate.bolshencai_liu_info},
+            charlotte:true,
+            trigger:{player:'phaseJieshuBegin'},
+            filter:function(event,player){
+            return player.hasMark('bolshencai_liu');
+            },
+            direct:true,
+            content:function(){
+            player.turnOver();
+            },
+            },
+            die:{
+            mod:{
+            maxHandcard:function(player,num){
+            return num-player.countMark('bolshencai_die');
+            },
+            },
+            mark:true,
+            intro:{content:()=>lib.translate.bolshencai_die_info},
+            charlotte:true,
+            trigger:{player:'phaseEnd'},
+            filter:function(event,player){
+            return player.countMark('bolshencai_die')>game.countPlayer();
+            },
+            direct:true,
+            content:function(){
+            player.die();
+            },
+            },
+            },
+            },
+            bolshencai2:{charlotte:true,onremove:true},
+
+
+            bolxunshi:{
+            mod:{
+            aiValue:function(player,card,num){
+            if(card.name=='zhangba') return 15;
+            if(player.getEquip('zhangba')&&player.countCards('hs')>1) return 0.05*get.value(card);
+            },
+            cardname:function(card,player){
+            var bool=false;
+            if(!_status.bolxunshiCheck){
+            _status.bolxunshiCheck=true;
+            var info=lib.card[card.name];
+            if(get.type(card)=='trick'&&info.selectTarget&&info.selectTarget!=1&&!info.toself){
+            if(!card.storage) card.storage={};
+            card.storage.bolxunshi=true;
+            bool=true;
+            }
+            delete _status.bolxunshiCheck;
+            }
+            if(bool) return 'sha';
+            },
+            suit:function(card,suit){
+            if(card.storage&&card.storage.bolxunshi&&get.position(card)=='h') return 'none';
+            },
+            targetInRange:function(card,player){
+            if(get.color(card)=='none') return true;
+            },
+            cardUsable:function(card,player,num){
+            if(get.color(card)=='none') return Infinity;
+            },
+            cardEnabled2:function(card,player){
+            if(!_status.event.skill||!lib.skill[_status.event.skill].viewAs) return;
+            if(!ui.selected.cards.length||get.color(ui.selected.cards)!=get.color(card)) return true;
+            },
+            },
+            trigger:{player:'useCard2'},
+            filter:function(event,player){
+            return get.color(event.card,player)=='none';
+            },
+            forced:true,
+            content:function(){
+            'step 0'
+            if(!game.hasPlayer(function(target){
+            return target!=player&&!trigger.targets.contains(target)&&lib.filter.targetEnabled2(trigger.card,player,target);
+            })) event.goto(2);
+            else player.chooseTarget('是否为'+get.translation(trigger.card)+'添加任意个目标？',[1,Infinity],function(card,player,target){
+            var evt=_status.event.getTrigger();
+            return target!=player&&!evt.targets.contains(target)&&lib.filter.targetEnabled2(evt.card,player,target);
+            }).set('ai',function(target){
+            return get.effect(target,_status.event.getTrigger().card,_status.event.player);
+            });
+            'step 1'
+            if(result.bool){
+            var targets=result.targets.sortBySeat();
+            player.line(targets);
+            trigger.targets.addArray(targets);
+            }
+            'step 2'
+            if(player.countMark('bolxunshi')<4) player.addMark('bolxunshi',1,false);
+            },
+            },
+
         },
         translate: {
             wuzhaoxiang: '吴赵襄',
@@ -1623,6 +1813,21 @@ game.import('character', function (lib, game, ui, get, ai, _status) {
             baofu_info: '锁定技，你的攻击范围+1。当你于回合外受到伤害时，你下回合使用杀的次数和伤害+1。',
             leiqie: '雷切',
             leiqie_info: '锁定技，你造成的伤害均为雷电伤害。',
+            bol_shen_zhangfei:'神张飞',
+            bolshencai:'神裁',
+            bolshencai_info:'出牌阶段限{ 1 }次，你可以令一名其他角色进行判定，然后你获得此判定牌。若判定牌包含以下内容，其获得对应标记（若其已有“笞”/“杖”/“徒”/“流”标记则改为修改其拥有的对应标记）：体力，“笞”标记；武器，“杖”标记；打出，“徒”标记；距离，“流”标记；若判定牌不包含以上内容，该角色获得1个“死”标记，然后你获得其区域内的一张牌。',
+            bolshencai_chi:'笞',
+            bolshencai_chi_info:'当你受到伤害后，你失去等量的体力。',
+            bolshencai_zhang:'杖',
+            bolshencai_zhang_info:'你无法响应【杀】。',
+            bolshencai_tu:'徒',
+            bolshencai_tu_info:'当你不因此法失去手牌后，你随机弃置一张手牌。',
+            bolshencai_liu:'流',
+            bolshencai_liu_info:'结束阶段，你将武将牌翻面。',
+            bolshencai_die:'死',
+            bolshencai_die_info:'你的手牌上限-X；回合结束时，若X大于场上的存活角色数，你死亡。（X为你拥有的“死”标记数）',
+            bolxunshi:'讯使',
+            bolxunshi_info:'锁定技，你的多目标锦囊牌均视为无色的无属性【杀】。你使用无色牌无距离和次数限制且可以额外指定任意个目标，然后你令〖神裁〗描述{ }中的数值+1（{ }中的数值至多为5）。',
         },
     };
 });
